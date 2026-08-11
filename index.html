@@ -1,0 +1,3340 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Trash Bin Dashboard</title>
+
+<style>
+
+/* =========================================================
+   RESET & BASE
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: url("BG SVNHS.jpg") no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+#loginPage {
+    width: 100%;
+    max-width: 400px;
+    padding: 50px;
+    margin: auto;
+
+    border-radius: 25px;
+
+    background: rgba(0, 0, 0, 0.95);
+
+    text-align: center;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+
+    backdrop-filter: blur(10px);
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    z-index: 9999;
+}
+
+#loginPage h2 {
+    font-size: 32px;
+    letter-spacing: 2px;
+    margin-bottom: 25px;
+
+    color: #00ffd5;
+
+    text-shadow:
+        0 0 20px rgba(0, 255, 213, 0.6);
+}
+
+#loginPage input {
+    width: 85%;
+
+    padding: 15px;
+
+    margin: 12px 0;
+
+    border-radius: 12px;
+    border: none;
+    outline: none;
+
+    font-size: 16px;
+
+    background: rgba(255, 255, 255, 0.1);
+
+    color: #fff;
+
+    transition: 0.3s;
+}
+
+#loginPage input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+#loginPage input:focus {
+    background: rgba(255, 255, 255, 0.2);
+
+    box-shadow:
+        0 0 15px rgba(0, 255, 213, 0.7);
+}
+
+#loginPage button {
+    width: 90%;
+
+    padding: 15px;
+
+    margin-top: 20px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(135deg, #00ffd5, #00c2ff);
+
+    color: #000;
+
+    font-weight: 700;
+
+    font-size: 18px;
+
+    transition: 0.3s;
+}
+
+#loginPage button:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(0, 255, 213, 0.6);
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+#main {
+    display: none;
+
+    width: 100%;
+    height: 100vh;
+
+    flex-direction: row;
+}
+
+
+/* =========================================================
+   SIDE NAVIGATION
+========================================================= */
+
+#sideNav {
+    width: 250px;
+
+    background: rgba(0, 0, 0, 0.85);
+
+    padding: 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    box-shadow:
+        2px 0 20px rgba(0, 255, 213, 0.5);
+}
+
+.schoolHeader {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+.logoCircle {
+    width: 130px;
+    height: 130px;
+
+    border-radius: 50%;
+
+    background: #fff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    margin-bottom: 10px;
+}
+
+.logoCircle img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+.schoolName {
+    font-size: 14px;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    margin-bottom: 30px;
+
+    line-height: 1.3;
+
+    color: #00ffd5;
+
+    text-shadow:
+        0 0 8px rgba(0, 255, 213, 0.5);
+}
+
+.navBtn {
+    width: 100%;
+
+    padding: 15px;
+
+    margin: 10px 0;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.05);
+
+    color: #00ffd5;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    text-align: left;
+
+    padding-left: 20px;
+
+    transition: 0.3s;
+}
+
+.navBtn:hover {
+    background:
+        linear-gradient(135deg, #00ffd5, #00c2ff);
+
+    color: #000;
+
+    transform: translateX(5px);
+
+    box-shadow:
+        0 5px 20px rgba(0, 255, 213, 0.5);
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+#content {
+    flex: 1;
+
+    padding: 40px 50px;
+
+    overflow-y: auto;
+
+    background: rgba(0, 0, 0, 0.3);
+
+    backdrop-filter: blur(5px);
+}
+
+#content h1 {
+    text-align: center;
+
+    font-size: 36px;
+
+    letter-spacing: 3px;
+
+    color: #00ffd5;
+
+    margin-bottom: 30px;
+
+    text-shadow:
+        0 0 20px rgba(0, 255, 213, 0.6);
+}
+
+#content h2 {
+    text-align: center;
+
+    margin-bottom: 25px;
+
+    color: #00ffd5;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    background: rgba(255, 255, 255, 0.95);
+
+    padding: 20px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.15);
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(200px, 1fr));
+
+    gap: 20px;
+
+    margin-bottom: 30px;
+}
+
+.stat {
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background: rgba(0, 0, 0, 0.2);
+
+    box-shadow:
+        0 0 20px rgba(0, 255, 213, 0.3);
+
+    text-align: center;
+
+    transition: 0.5s;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.stat:hover {
+    transform: scale(1.04);
+
+    box-shadow:
+        0 0 30px rgba(0, 255, 213, 0.6);
+}
+
+.stat-title {
+    font-size: 14px;
+
+    letter-spacing: 2px;
+
+    opacity: 0.8;
+
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 36px;
+
+    font-weight: 700;
+
+    margin-top: 10px;
+
+    color: #00ffd5;
+
+    text-shadow:
+        0 0 15px rgba(0, 255, 213, 0.7);
+}
+
+.stat small {
+    display: block;
+
+    margin-top: 8px;
+
+    opacity: 0.7;
+}
+
+
+/* =========================================================
+   QUICK STATS
+========================================================= */
+
+.quickStats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(120px, 1fr));
+
+    gap: 10px;
+
+    margin: 15px 0;
+
+    padding: 15px;
+
+    background:
+        rgba(0, 255, 213, 0.1);
+
+    border-radius: 12px;
+
+    border:
+        1px solid rgba(0, 255, 213, 0.3);
+}
+
+.quickStat {
+    text-align: center;
+
+    font-weight: bold;
+
+    color: #00ffd5;
+}
+
+
+/* =========================================================
+   MODE
+========================================================= */
+
+.mode-box {
+    margin-bottom: 30px;
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(135deg, #00ffd5, #00c2ff);
+
+    color: #000;
+
+    font-weight: 700;
+
+    font-size: 22px;
+
+    letter-spacing: 2px;
+
+    box-shadow:
+        0 10px 25px rgba(0, 255, 213, 0.4);
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+button.aestheticBtn {
+    background:
+        linear-gradient(135deg, #00ffd5, #00c2ff);
+
+    border: none;
+
+    padding: 15px 25px;
+
+    border-radius: 15px;
+
+    color: #000;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    transition: 0.3s;
+}
+
+button.aestheticBtn:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 10px 25px rgba(0, 255, 213, 0.6);
+}
+
+
+/* =========================================================
+   HELPFUL BUTTONS
+========================================================= */
+
+.helpfulBtns {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+
+    gap: 15px;
+
+    margin: 20px 0;
+}
+
+.helpBtn {
+    padding: 12px 20px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    color: #fff;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition: all 0.3s;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.helpBtn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 20px rgba(0, 255, 213, 0.4);
+}
+
+.btn-clear {
+    background:
+        linear-gradient(135deg, #ff9800, #ffb74d);
+}
+
+.btn-copy {
+    background:
+        linear-gradient(135deg, #9c27b0, #ba68c8);
+}
+
+.btn-refresh {
+    background:
+        linear-gradient(135deg, #00bcd4, #4dd0e1);
+}
+
+.btn-export {
+    background:
+        linear-gradient(135deg, #4caf50, #81c784);
+}
+
+.btn-print {
+    background:
+        linear-gradient(135deg, #607d8b, #90a4ae);
+}
+
+.btn-summary {
+    background:
+        linear-gradient(135deg, #e91e63, #f06292);
+}
+
+
+/* =========================================================
+   ADMIN PANEL
+========================================================= */
+
+#adminPanel {
+    background: rgba(0, 0, 0, 0.5);
+
+    padding: 20px;
+
+    border-radius: 20px;
+
+    margin-top: 20px;
+
+    box-shadow:
+        0 0 15px rgba(0, 255, 213, 0.2);
+}
+
+.adminGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(250px, 1fr));
+
+    gap: 20px;
+}
+
+.adminBox h4 {
+    color: #2e7d32;
+
+    margin-bottom: 10px;
+}
+
+.adminBox input {
+    width: 100%;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    border: 1px solid #aaa;
+
+    margin-bottom: 10px;
+
+    color: #000;
+}
+
+.adminBox button {
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #2e7d32;
+
+    color: #fff;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.adminBox button:hover {
+    background: #1b5e20;
+}
+
+.dangerBtn {
+    background: #c62828 !important;
+}
+
+.dangerBtn:hover {
+    background: #8e0000 !important;
+}
+
+
+/* =========================================================
+   HOPPER STATUS
+========================================================= */
+
+.hopperStatus {
+    margin-top: 20px;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    background:
+        rgba(0, 255, 213, 0.1);
+
+    border:
+        1px solid rgba(0, 255, 213, 0.3);
+
+    text-align: center;
+}
+
+.hopperStatus h3 {
+    color: #00ffd5;
+
+    margin-bottom: 10px;
+}
+
+.hopperBalance {
+    font-size: 40px;
+
+    font-weight: bold;
+
+    color: #00ffd5;
+
+    text-shadow:
+        0 0 15px rgba(0, 255, 213, 0.7);
+}
+
+
+/* =========================================================
+   RECORDS
+========================================================= */
+
+.recordsCard {
+    overflow-x: auto;
+}
+
+.recordsCard table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    font-size: 15px;
+
+    color: #000;
+}
+
+.recordsCard th {
+    background: #2e7d32;
+
+    color: #fff;
+
+    padding: 12px;
+
+    font-weight: bold;
+}
+
+.recordsCard td {
+    padding: 10px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #ccc;
+
+    font-weight: 600;
+}
+
+.recordsCard tbody tr:nth-child(even) {
+    background: #f1f8f4;
+}
+
+.recordsCard tbody tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+.recordsCard tfoot {
+    background: #c8e6c9;
+
+    font-weight: bold;
+}
+
+.recordsCard tfoot td {
+    padding: 12px;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   DOWNLOAD
+========================================================= */
+
+.downloadBtn {
+    margin-top: 15px;
+
+    padding: 12px 20px;
+
+    background: #1976d2;
+
+    color: #fff;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.downloadBtn:hover {
+    background: #0d47a1;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+    margin-top: 40px;
+
+    font-size: 14px;
+
+    opacity: 0.6;
+
+    letter-spacing: 1px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    #content {
+        padding: 20px;
+    }
+
+    #sideNav {
+        width: 200px;
+
+        padding: 10px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    #content h1 {
+        font-size: 28px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =======================================================
+     LOGIN
+======================================================= -->
+
+<div id="loginPage">
+
+    <h2>Admin Login</h2>
+
+    <input
+        type="text"
+        id="username"
+        placeholder="Username"
+    >
+
+    <br>
+
+    <input
+        type="password"
+        id="password"
+        placeholder="Password"
+    >
+
+    <br>
+
+    <button
+        class="aestheticBtn"
+        onclick="login()"
+    >
+        Login
+    </button>
+
+</div>
+
+
+<!-- =======================================================
+     MAIN SYSTEM
+======================================================= -->
+
+<div id="main" style="display:none;">
+
+
+<!-- =======================================================
+     SIDE NAVIGATION
+======================================================= -->
+
+<div id="sideNav">
+
+    <div class="schoolHeader">
+
+        <div class="logoCircle">
+
+            <img
+                id="schoolLogo"
+                src="SVNHS.jpg"
+                alt="School Logo"
+            >
+
+        </div>
+
+        <div class="schoolName">
+
+            SAN VICENTE NATIONAL HIGH SCHOOL
+            <br>
+
+            TRASH2CASH SYSTEM
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="navBtn"
+        onclick="showSection('dashboardSec')"
+    >
+        Dashboard
+    </button>
+
+
+    <button
+        class="navBtn"
+        onclick="showSection('adminSec')"
+    >
+        Admin Panel
+    </button>
+
+
+    <button
+        class="navBtn"
+        onclick="showSection('recordsSec')"
+    >
+        Records
+    </button>
+
+
+    <button
+        class="navBtn"
+        onclick="logout()"
+    >
+        Logout
+    </button>
+
+</div>
+
+
+<!-- =======================================================
+     CONTENT
+======================================================= -->
+
+<div id="content">
+
+
+<!-- =======================================================
+     DASHBOARD
+======================================================= -->
+
+<div id="dashboardSec">
+
+    <h1>SMART TRASH BIN</h1>
+
+
+    <!-- QUICK STATS -->
+
+    <div class="quickStats">
+
+        <div class="quickStat">
+            Today:
+            <span id="todayTotal">0</span>
+        </div>
+
+        <div class="quickStat">
+            Weekly:
+            <span id="weekTotal">0</span>
+        </div>
+
+        <div class="quickStat">
+            Value:
+            ₱<span id="totalValue">0.00</span>
+        </div>
+
+        <div class="quickStat">
+            Rate:
+            <span id="collectionRate">0/hr</span>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN STAT CARDS -->
+
+    <div class="stats">
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                CANS
+            </div>
+
+            <div
+                class="stat-value"
+                id="cans"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                BOTTLES
+            </div>
+
+            <div
+                class="stat-value"
+                id="bottles"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <!-- HOPPER -->
+
+        <div class="stat">
+
+            <div class="stat-title">
+                HOPPER COINS
+            </div>
+
+            <div
+                class="stat-value"
+                id="coins"
+            >
+                0
+            </div>
+
+            <small>
+                Available payout balance
+            </small>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                TOTAL ITEMS
+            </div>
+
+            <div
+                class="stat-value"
+                id="total"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MODE -->
+
+    <div class="mode-box">
+
+        MODE:
+        <span id="mode">
+            IDLE
+        </span>
+
+    </div>
+
+
+    <!-- HELPFUL BUTTONS -->
+
+    <div class="helpfulBtns">
+
+        <button
+            class="helpBtn btn-refresh"
+            onclick="refreshData()"
+        >
+            🔄 Refresh Data
+        </button>
+
+
+        <button
+            class="helpBtn btn-copy"
+            onclick="copyStats()"
+        >
+            📋 Copy Stats
+        </button>
+
+
+        <button
+            class="helpBtn btn-clear"
+            onclick="clearInputs()"
+        >
+            🧹 Clear Inputs
+        </button>
+
+
+        <button
+            class="helpBtn btn-summary"
+            onclick="showSummary()"
+        >
+            📊 Quick Summary
+        </button>
+
+    </div>
+
+
+    <button
+        class="aestheticBtn"
+        onclick="connectSerial()"
+    >
+        CONNECT ARDUINO
+    </button>
+
+</div>
+
+
+<!-- =======================================================
+     ADMIN PANEL
+======================================================= -->
+
+<div
+    id="adminSec"
+    style="display:none;"
+>
+
+    <h2>Admin Controls</h2>
+
+
+    <div class="adminGrid">
+
+
+        <!-- ADD COINS -->
+
+        <div class="card adminBox">
+
+            <h4>
+                Register / Add Hopper Coins
+            </h4>
+
+            <input
+                type="number"
+                id="manualCoins"
+                min="0"
+                step="1"
+                placeholder="Example: 100"
+            >
+
+            <button
+                onclick="addManualCoin()"
+            >
+                Add Coins
+            </button>
+
+        </div>
+
+
+        <!-- DEDUCT COINS -->
+
+        <div class="card adminBox">
+
+            <h4>
+                Manual Deduct
+            </h4>
+
+            <input
+                type="number"
+                id="deductCoins"
+                min="0"
+                step="1"
+                placeholder="Amount"
+            >
+
+            <button
+                onclick="deductManualCoin()"
+            >
+                Deduct Coins
+            </button>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+
+        <div class="card adminBox">
+
+            <h4>
+                Quick Actions
+            </h4>
+
+            <div
+                class="helpfulBtns"
+                style="
+                    grid-template-columns:1fr;
+                    gap:8px;
+                "
+            >
+
+                <button
+                    class="helpBtn btn-clear"
+                    onclick="clearAllInputs()"
+                >
+                    🧹 Clear All
+                </button>
+
+
+                <button
+                    class="helpBtn btn-refresh"
+                    onclick="refreshData()"
+                >
+                    🔄 Refresh
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SYSTEM CONTROL -->
+
+        <div class="card adminBox">
+
+            <h4>
+                System Control
+            </h4>
+
+            <button
+                class="dangerBtn"
+                onclick="resetData()"
+            >
+                RESET ALL DATA
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- HOPPER STATUS -->
+
+    <div class="hopperStatus">
+
+        <h3>
+            CURRENT HOPPER BALANCE
+        </h3>
+
+        <div class="hopperBalance">
+
+            ₱<span id="adminHopperBalance">
+                0.00
+            </span>
+
+        </div>
+
+        <p>
+            This is the amount currently available
+            for recycling payouts.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     RECORDS
+======================================================= -->
+
+<div
+    id="recordsSec"
+    style="display:none;"
+>
+
+    <h2>
+        Daily Records
+    </h2>
+
+
+    <div class="helpfulBtns">
+
+        <button
+            class="helpBtn btn-export"
+            onclick="downloadReceipt()"
+        >
+            📥 Download PNG
+        </button>
+
+
+        <button
+            class="helpBtn btn-print"
+            onclick="printTable()"
+        >
+            🖨️ Print Table
+        </button>
+
+
+        <button
+            class="helpBtn btn-copy"
+            onclick="copyTableData()"
+        >
+            📋 Copy Table
+        </button>
+
+
+        <button
+            class="helpBtn btn-summary"
+            onclick="showRecordSummary()"
+        >
+            📊 Summary
+        </button>
+
+
+        <button
+            class="helpBtn btn-clear"
+            onclick="clearFilters()"
+        >
+            🔍 Clear Filter
+        </button>
+
+    </div>
+
+
+    <div class="card recordsCard">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Cans
+                    </th>
+
+                    <th>
+                        Bottles
+                    </th>
+
+                    <th>
+                        Recycling Transactions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="recordList">
+            </tbody>
+
+
+            <tfoot>
+
+                <tr>
+
+                    <td>
+                        Total
+                    </td>
+
+                    <td id="totalCans">
+                        0
+                    </td>
+
+                    <td id="totalBottles">
+                        0
+                    </td>
+
+                    <td id="totalCoins">
+                        0
+                    </td>
+
+                </tr>
+
+            </tfoot>
+
+        </table>
+
+
+        <button
+            class="downloadBtn"
+            onclick="downloadReceipt()"
+        >
+            Download Receipt
+        </button>
+
+    </div>
+
+</div>
+
+
+<div class="footer">
+
+    JV STUDIO • ARDUINO UNO
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- =======================================================
+     CRYPTO JS
+======================================================= -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+
+<script>
+
+/* =========================================================
+   AUTHENTICATION
+========================================================= */
+
+const ADMIN_USER = "admin";
+
+const ADMIN_PASS_HASH =
+    "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+
+
+/* =========================================================
+   INVENTORY
+========================================================= */
+
+/*
+    IMPORTANT:
+
+    inventory.cans
+        = total cans recycled
+
+    inventory.bottles
+        = total bottles recycled
+
+    hopperCoins
+        = ACTUAL COINS CURRENTLY INSIDE THE HOPPER
+
+    hopperCoins is completely separate from Arduino COINS.
+*/
+
+let inventory = {
+
+    cans:
+        Number(localStorage.getItem("cans")) || 0,
+
+    bottles:
+        Number(localStorage.getItem("bottles")) || 0
+
+};
+
+
+/*
+    Load hopper balance.
+
+    Example:
+
+    Admin previously registered 100
+
+    localStorage:
+        hopperCoins = 100
+
+    After page refresh:
+        hopperCoins = 100
+*/
+
+let hopperCoins =
+    Number(localStorage.getItem("hopperCoins")) || 0;
+
+
+/* =========================================================
+   DAILY RECORDS
+========================================================= */
+
+let dailyRecords =
+    JSON.parse(
+        localStorage.getItem("dailyRecords")
+    ) || {};
+
+
+/*
+    Number of recycling transactions.
+
+    This is NOT the hopper balance.
+*/
+
+let transactionRecords =
+    JSON.parse(
+        localStorage.getItem("transactionRecords")
+    ) || {};
+
+
+/* =========================================================
+   LAST ARDUINO COUNTERS
+========================================================= */
+
+let lastSerial =
+    JSON.parse(
+        localStorage.getItem("lastSerial")
+    ) || {
+
+        cans: 0,
+
+        bottles: 0
+
+    };
+
+
+/* =========================================================
+   SERIAL VARIABLES
+========================================================= */
+
+let port = null;
+
+let reader = null;
+
+let buffer = "";
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function login() {
+
+    const user =
+        document.getElementById("username").value.trim();
+
+    const pass =
+        document.getElementById("password").value.trim();
+
+
+    if (
+        user === ADMIN_USER &&
+        CryptoJS.SHA256(pass).toString() === ADMIN_PASS_HASH
+    ) {
+
+        localStorage.setItem(
+            "loggedIn",
+            "true"
+        );
+
+        document.getElementById(
+            "loginPage"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "main"
+        ).style.display = "flex";
+
+
+        updateUI();
+
+    }
+
+    else {
+
+        alert(
+            "Invalid credentials."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   PAGE LOAD
+========================================================= */
+
+window.onload = function () {
+
+    if (
+        localStorage.getItem("loggedIn") === "true"
+    ) {
+
+        document.getElementById(
+            "loginPage"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "main"
+        ).style.display = "flex";
+
+
+        updateUI();
+
+    }
+
+};
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout() {
+
+    localStorage.removeItem(
+        "loggedIn"
+    );
+
+
+    document.getElementById(
+        "main"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "loginPage"
+    ).style.display = "block";
+
+}
+
+
+/* =========================================================
+   SECTION NAVIGATION
+========================================================= */
+
+function showSection(id) {
+
+    const sections = [
+        "dashboardSec",
+        "adminSec",
+        "recordsSec"
+    ];
+
+
+    sections.forEach(
+        section => {
+
+            document.getElementById(
+                section
+            ).style.display = "none";
+
+        }
+    );
+
+
+    document.getElementById(
+        id
+    ).style.display = "block";
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   SERIAL CONNECTION
+========================================================= */
+
+async function connectSerial() {
+
+    if (!("serial" in navigator)) {
+
+        alert(
+            "Web Serial API is not supported by this browser."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        port =
+            await navigator.serial.requestPort();
+
+
+        await port.open({
+            baudRate: 9600
+        });
+
+
+        reader =
+            port.readable.getReader();
+
+
+        alert(
+            "Arduino Connected Successfully!"
+        );
+
+
+        readLoop();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Serial connection failed."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SERIAL READ LOOP
+========================================================= */
+
+async function readLoop() {
+
+    const decoder =
+        new TextDecoder();
+
+
+    try {
+
+        while (true) {
+
+            const {
+                value,
+                done
+            } = await reader.read();
+
+
+            if (done) {
+
+                break;
+
+            }
+
+
+            if (value) {
+
+                buffer +=
+                    decoder.decode(value);
+
+
+                const lines =
+                    buffer.split("\n");
+
+
+                buffer =
+                    lines.pop();
+
+
+                lines.forEach(
+                    parseLine
+                );
+
+            }
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Serial read error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   PARSE ARDUINO DATA
+========================================================= */
+
+/*
+    Example Arduino message:
+
+    CANS:5,BOTTLES:10,MODE:READY
+
+    IMPORTANT:
+
+    COINS is intentionally ignored.
+
+    Why?
+
+    Because:
+
+        Arduino COINS
+             ≠
+        Hopper Balance
+
+    The hopper balance belongs to the Admin system.
+
+    Therefore:
+
+        Admin adds 100
+        Hopper = 100
+
+    Arduino sends:
+
+        COINS:1
+
+    We DO NOT do:
+
+        hopperCoins = 1
+
+    because that would destroy the registered balance.
+*/
+
+function parseLine(line) {
+
+    line = line.trim();
+
+
+    if (!line) {
+
+        return;
+
+    }
+
+
+    let newC =
+        lastSerial.cans;
+
+
+    let newB =
+        lastSerial.bottles;
+
+
+    let transactionValue = 0;
+
+
+    line.split(",").forEach(
+        part => {
+
+            const pieces =
+                part.split(":");
+
+
+            if (pieces.length < 2) {
+
+                return;
+
+            }
+
+
+            const key =
+                pieces[0].trim();
+
+
+            const value =
+                pieces
+                    .slice(1)
+                    .join(":")
+                    .trim();
+
+
+            /* -----------------------------
+               CANS
+            ----------------------------- */
+
+            if (key === "CANS") {
+
+                const parsed =
+                    parseInt(value);
+
+
+                if (!isNaN(parsed)) {
+
+                    newC = parsed;
+
+                }
+
+            }
+
+
+            /* -----------------------------
+               BOTTLES
+            ----------------------------- */
+
+            if (key === "BOTTLES") {
+
+                const parsed =
+                    parseInt(value);
+
+
+                if (!isNaN(parsed)) {
+
+                    newB = parsed;
+
+                }
+
+            }
+
+
+            /* -----------------------------
+               MODE
+            ----------------------------- */
+
+            if (key === "MODE") {
+
+                document.getElementById(
+                    "mode"
+                ).innerText = value;
+
+            }
+
+
+            /*
+                OPTIONAL TRANSACTION EVENT
+
+                If your Arduino sends:
+
+                    PAY:1
+
+                OR:
+
+                    DEDUCT:1
+
+                the system will deduct ₱1.
+
+                This is the recommended way
+                to communicate a payout.
+            */
+
+            if (
+                key === "PAY" ||
+                key === "DEDUCT"
+            ) {
+
+                const parsed =
+                    Number(value);
+
+
+                if (
+                    Number.isFinite(parsed) &&
+                    parsed > 0
+                ) {
+
+                    transactionValue +=
+                        parsed;
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       ADD ONLY NEW CANS
+    ===================================================== */
+
+    if (
+        newC >
+        lastSerial.cans
+    ) {
+
+        inventory.cans +=
+            newC - lastSerial.cans;
+
+    }
+
+
+    /* =====================================================
+       ADD ONLY NEW BOTTLES
+    ===================================================== */
+
+    if (
+        newB >
+        lastSerial.bottles
+    ) {
+
+        inventory.bottles +=
+            newB - lastSerial.bottles;
+
+    }
+
+
+    /* =====================================================
+       PROCESS PAYOUT
+    ===================================================== */
+
+    if (
+        transactionValue > 0
+    ) {
+
+        deductRecyclingAmount(
+            transactionValue
+        );
+
+    }
+
+
+    /* =====================================================
+       SAVE ARDUINO COUNTERS
+    ===================================================== */
+
+    lastSerial = {
+
+        cans: newC,
+
+        bottles: newB
+
+    };
+
+
+    localStorage.setItem(
+        "lastSerial",
+        JSON.stringify(lastSerial)
+    );
+
+
+    updateUI();
+
+}
+
+
+/* =========================================================
+   HOPPER DEDUCTION
+========================================================= */
+
+/*
+    This function removes money from the hopper.
+
+    Example:
+
+        Hopper = ₱100
+
+        deduction = ₱1
+
+        Hopper = ₱99
+*/
+
+function deductRecyclingAmount(
+    amount
+) {
+
+    amount =
+        Number(amount);
+
+
+    if (
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ) {
+
+        return false;
+
+    }
+
+
+    /*
+        DO NOT ALLOW NEGATIVE HOPPER
+    */
+
+    if (
+        hopperCoins < amount
+    ) {
+
+        alert(
+            "⚠️ NOT ENOUGH COINS IN HOPPER!\n\n" +
+
+            "Required: ₱" +
+            amount.toFixed(2) +
+
+            "\nAvailable: ₱" +
+            hopperCoins.toFixed(2)
+        );
+
+
+        return false;
+
+    }
+
+
+    /*
+        ACTUAL DEDUCTION
+    */
+
+    hopperCoins -= amount;
+
+
+    /*
+        Save immediately
+    */
+
+    localStorage.setItem(
+        "hopperCoins",
+        hopperCoins
+    );
+
+
+    /*
+        Record transaction
+    */
+
+    recordTransaction(
+        amount
+    );
+
+
+    updateUI();
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   EXACT ₱1 RECYCLING DEDUCTION
+========================================================= */
+
+/*
+    Use this function when ONE recycling transaction
+    reaches exactly ₱1.
+
+    Example:
+
+        ₱100 → ₱99
+*/
+
+function deductRecyclingPeso() {
+
+    return deductRecyclingAmount(
+        1
+    );
+
+}
+
+
+/* =========================================================
+   RECORD TRANSACTION
+========================================================= */
+
+function recordTransaction(
+    amount
+) {
+
+    const date =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    if (
+        !transactionRecords[date]
+    ) {
+
+        transactionRecords[date] = {
+
+            transactions: 0,
+
+            value: 0
+
+        };
+
+    }
+
+
+    transactionRecords[date].transactions += 1;
+
+    transactionRecords[date].value +=
+        Number(amount);
+
+
+    localStorage.setItem(
+        "transactionRecords",
+        JSON.stringify(
+            transactionRecords
+        )
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE UI
+========================================================= */
+
+function updateUI() {
+
+    /*
+        CANS
+    */
+
+    document.getElementById(
+        "cans"
+    ).innerText =
+        inventory.cans;
+
+
+    /*
+        BOTTLES
+    */
+
+    document.getElementById(
+        "bottles"
+    ).innerText =
+        inventory.bottles;
+
+
+    /*
+        HOPPER COINS
+
+        THIS IS THE IMPORTANT PART.
+
+        Dashboard shows hopperCoins,
+        NOT Arduino COINS.
+    */
+
+    document.getElementById(
+        "coins"
+    ).innerText =
+        hopperCoins.toFixed(2);
+
+
+    /*
+        TOTAL ITEMS
+    */
+
+    document.getElementById(
+        "total"
+    ).innerText =
+        inventory.cans +
+        inventory.bottles;
+
+
+    /*
+        ADMIN HOPPER BALANCE
+    */
+
+    document.getElementById(
+        "adminHopperBalance"
+    ).innerText =
+        hopperCoins.toFixed(2);
+
+
+    /*
+        SAVE COUNTERS
+    */
+
+    localStorage.setItem(
+        "cans",
+        inventory.cans
+    );
+
+
+    localStorage.setItem(
+        "bottles",
+        inventory.bottles
+    );
+
+
+    /*
+        SAVE HOPPER
+
+        This makes sure that after refresh:
+
+            ₱100 stays ₱100
+
+        until something actually deducts it.
+    */
+
+    localStorage.setItem(
+        "hopperCoins",
+        hopperCoins
+    );
+
+
+    updateQuickStats();
+
+    recordDaily();
+
+}
+
+
+/* =========================================================
+   DAILY RECORD
+========================================================= */
+
+function recordDaily() {
+
+    const date =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    if (
+        !dailyRecords[date]
+    ) {
+
+        dailyRecords[date] = {
+
+            cans: 0,
+
+            bottles: 0
+
+        };
+
+    }
+
+
+    /*
+        Store current totals.
+    */
+
+    dailyRecords[date].cans =
+        inventory.cans;
+
+
+    dailyRecords[date].bottles =
+        inventory.bottles;
+
+
+    localStorage.setItem(
+        "dailyRecords",
+        JSON.stringify(
+            dailyRecords
+        )
+    );
+
+
+    updateRecordUI();
+
+}
+
+
+/* =========================================================
+   QUICK STATISTICS
+========================================================= */
+
+function updateQuickStats() {
+
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    const todayRecord =
+        dailyRecords[today];
+
+
+    const todayTotal =
+        todayRecord
+            ? (
+                Number(todayRecord.cans || 0) +
+                Number(todayRecord.bottles || 0)
+            )
+            : 0;
+
+
+    document.getElementById(
+        "todayTotal"
+    ).innerText =
+        todayTotal;
+
+
+    document.getElementById(
+        "weekTotal"
+    ).innerText =
+        inventory.cans +
+        inventory.bottles;
+
+
+    /*
+        Example value:
+        each item = ₱0.50
+    */
+
+    const totalValue =
+        (
+            inventory.cans +
+            inventory.bottles
+        ) * 0.5;
+
+
+    document.getElementById(
+        "totalValue"
+    ).innerText =
+        totalValue.toFixed(2);
+
+
+    /*
+        Collection rate
+    */
+
+    const rate =
+        Math.round(
+            (
+                inventory.cans +
+                inventory.bottles
+            ) / 10
+        );
+
+
+    document.getElementById(
+        "collectionRate"
+    ).innerText =
+        rate + "/hr";
+
+}
+
+
+/* =========================================================
+   ADMIN ADD COINS
+========================================================= */
+
+/*
+    Example:
+
+        Hopper currently = ₱0
+
+        Admin enters:
+        100
+
+        Result:
+        ₱100
+*/
+
+function addManualCoin() {
+
+    const input =
+        document.getElementById(
+            "manualCoins"
+        );
+
+
+    const value =
+        Number(input.value);
+
+
+    if (
+        !Number.isFinite(value) ||
+        value <= 0
+    ) {
+
+        alert(
+            "Please enter a valid coin amount."
+        );
+
+        return;
+
+    }
+
+
+    /*
+        ADD TO HOPPER
+    */
+
+    hopperCoins += value;
+
+
+    /*
+        SAVE
+    */
+
+    localStorage.setItem(
+        "hopperCoins",
+        hopperCoins
+    );
+
+
+    updateUI();
+
+
+    alert(
+        "✅ Hopper loaded successfully!\n\n" +
+
+        "Added: ₱" +
+        value.toFixed(2) +
+
+        "\n\nCurrent Hopper Balance: ₱" +
+        hopperCoins.toFixed(2)
+    );
+
+
+    input.value = "";
+
+}
+
+
+/* =========================================================
+   ADMIN MANUAL DEDUCT
+========================================================= */
+
+function deductManualCoin() {
+
+    const input =
+        document.getElementById(
+            "deductCoins"
+        );
+
+
+    const value =
+        Number(input.value);
+
+
+    if (
+        !Number.isFinite(value) ||
+        value <= 0
+    ) {
+
+        alert(
+            "Please enter a valid deduction."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        value > hopperCoins
+    ) {
+
+        alert(
+            "⚠️ NOT ENOUGH COINS!\n\n" +
+
+            "Current Hopper Balance: ₱" +
+            hopperCoins.toFixed(2)
+        );
+
+        return;
+
+    }
+
+
+    hopperCoins -= value;
+
+
+    localStorage.setItem(
+        "hopperCoins",
+        hopperCoins
+    );
+
+
+    updateUI();
+
+
+    alert(
+        "✅ Coins deducted.\n\n" +
+
+        "Deducted: ₱" +
+        value.toFixed(2) +
+
+        "\nRemaining: ₱" +
+        hopperCoins.toFixed(2)
+    );
+
+
+    input.value = "";
+
+}
+
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+function refreshData() {
+
+    /*
+        Reload values from localStorage
+        so the UI reflects the saved values.
+    */
+
+    inventory.cans =
+        Number(
+            localStorage.getItem("cans")
+        ) || 0;
+
+
+    inventory.bottles =
+        Number(
+            localStorage.getItem("bottles")
+        ) || 0;
+
+
+    hopperCoins =
+        Number(
+            localStorage.getItem("hopperCoins")
+        ) || 0;
+
+
+    dailyRecords =
+        JSON.parse(
+            localStorage.getItem(
+                "dailyRecords"
+            )
+        ) || {};
+
+
+    updateUI();
+
+
+    alert(
+        "✅ Data refreshed successfully!"
+    );
+
+}
+
+
+/* =========================================================
+   COPY STATS
+========================================================= */
+
+function copyStats() {
+
+    const stats =
+        "TRASH2CASH SYSTEM\n\n" +
+
+        "Cans: " +
+        inventory.cans +
+
+        "\nBottles: " +
+        inventory.bottles +
+
+        "\nHopper Coins: ₱" +
+        hopperCoins.toFixed(2) +
+
+        "\nTotal Items: " +
+        (
+            inventory.cans +
+            inventory.bottles
+        );
+
+
+    navigator.clipboard
+        .writeText(stats)
+        .then(() => {
+
+            alert(
+                "📋 Stats copied!"
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   CLEAR INPUTS
+========================================================= */
+
+function clearInputs() {
+
+    document.getElementById(
+        "manualCoins"
+    ).value = "";
+
+
+    document.getElementById(
+        "deductCoins"
+    ).value = "";
+
+
+}
+
+
+/* =========================================================
+   CLEAR ALL INPUTS
+========================================================= */
+
+function clearAllInputs() {
+
+    clearInputs();
+
+    alert(
+        "🧹 Inputs cleared!"
+    );
+
+}
+
+
+/* =========================================================
+   QUICK SUMMARY
+========================================================= */
+
+function showSummary() {
+
+    const total =
+        inventory.cans +
+        inventory.bottles;
+
+
+    const value =
+        total * 0.5;
+
+
+    alert(
+        "📊 QUICK SUMMARY\n\n" +
+
+        "Cans: " +
+        inventory.cans +
+
+        "\nBottles: " +
+        inventory.bottles +
+
+        "\nTotal Items: " +
+        total +
+
+        "\nRecycling Value: ₱" +
+        value.toFixed(2) +
+
+        "\n\nHopper Balance: ₱" +
+        hopperCoins.toFixed(2)
+    );
+
+}
+
+
+/* =========================================================
+   RECORD TABLE
+========================================================= */
+
+function updateRecordUI() {
+
+    const table =
+        document.getElementById(
+            "recordList"
+        );
+
+
+    table.innerHTML = "";
+
+
+    let totalCans = 0;
+
+    let totalBottles = 0;
+
+    let totalTransactions = 0;
+
+
+    const dates =
+        Object.keys(
+            dailyRecords
+        ).sort();
+
+
+    dates.forEach(
+        date => {
+
+            const record =
+                dailyRecords[date];
+
+
+            const transactions =
+                transactionRecords[date]
+                    ? transactionRecords[date].transactions
+                    : 0;
+
+
+            totalCans +=
+                Number(record.cans || 0);
+
+
+            totalBottles +=
+                Number(record.bottles || 0);
+
+
+            totalTransactions +=
+                transactions;
+
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        ${date}
+                    </td>
+
+                    <td>
+                        ${record.cans || 0}
+                    </td>
+
+                    <td>
+                        ${record.bottles || 0}
+                    </td>
+
+                    <td>
+                        ${transactions}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+
+    document.getElementById(
+        "totalCans"
+    ).innerText =
+        totalCans;
+
+
+    document.getElementById(
+        "totalBottles"
+    ).innerText =
+        totalBottles;
+
+
+    document.getElementById(
+        "totalCoins"
+    ).innerText =
+        totalTransactions;
+
+}
+
+
+/* =========================================================
+   COPY TABLE
+========================================================= */
+
+function copyTableData() {
+
+    let tableData =
+        "Date,Cans,Bottles,Transactions\n";
+
+
+    Object.keys(
+        dailyRecords
+    ).forEach(
+        date => {
+
+            const record =
+                dailyRecords[date];
+
+
+            const transactions =
+                transactionRecords[date]
+                    ? transactionRecords[date].transactions
+                    : 0;
+
+
+            tableData +=
+                `${date},` +
+                `${record.cans || 0},` +
+                `${record.bottles || 0},` +
+                `${transactions}\n`;
+
+        }
+    );
+
+
+    navigator.clipboard
+        .writeText(tableData)
+        .then(() => {
+
+            alert(
+                "📋 Table data copied!"
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   RECORD SUMMARY
+========================================================= */
+
+function showRecordSummary() {
+
+    let cansTotal = 0;
+
+    let bottlesTotal = 0;
+
+    let transactionTotal = 0;
+
+
+    Object.keys(
+        dailyRecords
+    ).forEach(
+        date => {
+
+            const record =
+                dailyRecords[date];
+
+
+            cansTotal +=
+                Number(record.cans || 0);
+
+
+            bottlesTotal +=
+                Number(record.bottles || 0);
+
+
+            if (
+                transactionRecords[date]
+            ) {
+
+                transactionTotal +=
+                    Number(
+                        transactionRecords[date].transactions
+                    );
+
+            }
+
+        }
+    );
+
+
+    alert(
+        "📊 RECORD SUMMARY\n\n" +
+
+        "Total Cans: " +
+        cansTotal +
+
+        "\nTotal Bottles: " +
+        bottlesTotal +
+
+        "\nRecycling Transactions: " +
+        transactionTotal +
+
+        "\n\nCurrent Hopper: ₱" +
+        hopperCoins.toFixed(2)
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR FILTER
+========================================================= */
+
+function clearFilters() {
+
+    alert(
+        "🔍 No filters applied."
+    );
+
+}
+
+
+/* =========================================================
+   PRINT TABLE
+========================================================= */
+
+function printTable() {
+
+    window.print();
+
+}
+
+
+/* =========================================================
+   RESET ALL DATA
+========================================================= */
+
+function resetData() {
+
+    const confirmed =
+        confirm(
+            "⚠️ RESET ALL DATA?\n\n" +
+
+            "This will remove:\n" +
+
+            "• Cans\n" +
+            "• Bottles\n" +
+            "• Hopper Coins\n" +
+            "• Daily Records\n" +
+            "• Transaction Records\n" +
+            "• Arduino Counters\n\n" +
+
+            "This cannot be undone."
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    inventory = {
+
+        cans: 0,
+
+        bottles: 0
+
+    };
+
+
+    hopperCoins = 0;
+
+
+    dailyRecords = {};
+
+
+    transactionRecords = {};
+
+
+    lastSerial = {
+
+        cans: 0,
+
+        bottles: 0
+
+    };
+
+
+    localStorage.removeItem(
+        "cans"
+    );
+
+    localStorage.removeItem(
+        "bottles"
+    );
+
+    localStorage.removeItem(
+        "hopperCoins"
+    );
+
+    localStorage.removeItem(
+        "dailyRecords"
+    );
+
+    localStorage.removeItem(
+        "transactionRecords"
+    );
+
+
+    localStorage.setItem(
+        "lastSerial",
+        JSON.stringify(
+            lastSerial
+        )
+    );
+
+
+    updateUI();
+
+
+    alert(
+        "✅ All system data has been reset."
+    );
+
+}
+
+
+/* =========================================================
+   DOWNLOAD RECEIPT
+========================================================= */
+
+function downloadReceipt() {
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    canvas.width = 600;
+
+    canvas.height = 800;
+
+
+    /* Background */
+
+    ctx.fillStyle = "#ffffff";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* Logo */
+
+    const logo =
+        document.getElementById(
+            "schoolLogo"
+        );
+
+
+    try {
+
+        ctx.drawImage(
+            logo,
+            250,
+            20,
+            100,
+            100
+        );
+
+    }
+
+    catch (error) {
+
+        console.log(
+            "Logo could not be drawn."
+        );
+
+    }
+
+
+    /* Header */
+
+    ctx.fillStyle = "#2e7d32";
+
+    ctx.font =
+        "bold 22px Arial";
+
+    ctx.textAlign =
+        "center";
+
+
+    ctx.fillText(
+        "SAN VICENTE NATIONAL HIGH SCHOOL",
+        canvas.width / 2,
+        150
+    );
+
+
+    ctx.fillText(
+        "TRASH2CASH DAILY RECEIPT",
+        canvas.width / 2,
+        180
+    );
+
+
+    /* Table header */
+
+    ctx.fillStyle = "#000";
+
+    ctx.font =
+        "bold 18px Arial";
+
+    ctx.textAlign =
+        "left";
+
+
+    ctx.fillText(
+        "Date",
+        50,
+        220
+    );
+
+
+    ctx.fillText(
+        "Cans",
+        200,
+        220
+    );
+
+
+    ctx.fillText(
+        "Bottles",
+        300,
+        220
+    );
+
+
+    ctx.fillText(
+        "Transactions",
+        420,
+        220
+    );
+
+
+    ctx.font =
+        "16px Arial";
+
+
+    let y = 250;
+
+
+    let totalCans = 0;
+
+    let totalBottles = 0;
+
+    let totalTransactions = 0;
+
+
+    Object.keys(
+        dailyRecords
+    ).forEach(
+        date => {
+
+            const record =
+                dailyRecords[date];
+
+
+            const transactions =
+                transactionRecords[date]
+                    ? transactionRecords[date].transactions
+                    : 0;
+
+
+            ctx.fillText(
+                date,
+                50,
+                y
+            );
+
+
+            ctx.fillText(
+                String(
+                    record.cans || 0
+                ),
+                200,
+                y
+            );
+
+
+            ctx.fillText(
+                String(
+                    record.bottles || 0
+                ),
+                300,
+                y
+            );
+
+
+            ctx.fillText(
+                String(
+                    transactions
+                ),
+                450,
+                y
+            );
+
+
+            totalCans +=
+                Number(
+                    record.cans || 0
+                );
+
+
+            totalBottles +=
+                Number(
+                    record.bottles || 0
+                );
+
+
+            totalTransactions +=
+                transactions;
+
+
+            y += 30;
+
+        }
+    );
+
+
+    /* Totals */
+
+    ctx.font =
+        "bold 18px Arial";
+
+
+    ctx.fillText(
+        "TOTAL",
+        50,
+        y + 20
+    );
+
+
+    ctx.fillText(
+        String(totalCans),
+        200,
+        y + 20
+    );
+
+
+    ctx.fillText(
+        String(totalBottles),
+        300,
+        y + 20
+    );
+
+
+    ctx.fillText(
+        String(totalTransactions),
+        450,
+        y + 20
+    );
+
+
+    /* Hopper balance */
+
+    ctx.font =
+        "bold 18px Arial";
+
+
+    ctx.fillText(
+        "CURRENT HOPPER: ₱" +
+        hopperCoins.toFixed(2),
+        50,
+        y + 70
+    );
+
+
+    /* Footer */
+
+    ctx.font =
+        "16px Arial";
+
+
+    ctx.textAlign =
+        "center";
+
+
+    ctx.fillText(
+        "JV STUDIO • ARDUINO UNO",
+        canvas.width / 2,
+        canvas.height - 40
+    );
+
+
+    /* Download */
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.download =
+        "Trash2Cash_Receipt.png";
+
+
+    link.href =
+        canvas.toDataURL(
+            "image/png"
+        );
+
+
+    link.click();
+
+}
+
+</script>
+
+</body>
+</html>
+```
