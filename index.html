@@ -1326,7 +1326,11 @@ button.aestheticBtn:hover {
                     </th>
 
                     <th>
-                        Recycling Transactions
+                        Hopper Loaded
+                    </th>
+
+                    <th>
+                        Recycling Payouts
                     </th>
 
                 </tr>
@@ -1352,6 +1356,10 @@ button.aestheticBtn:hover {
 
                     <td id="totalBottles">
                         0
+                    </td>
+
+                    <td id="totalHopperLoaded">
+                        ₱0.00
                     </td>
 
                     <td id="totalCoins">
@@ -1479,6 +1487,32 @@ let transactionRecords =
 
 
 /* =========================================================
+   HOPPER LOADING RECORDS
+
+   Stores the ORIGINAL amount registered/added by admin.
+   This NEVER decreases when recycling payouts happen.
+========================================================= */
+
+let hopperRecords =
+    JSON.parse(
+        localStorage.getItem("hopperRecords")
+    ) || {};
+
+
+/* =========================================================
+   REWARDS ALREADY PAID
+
+   Every ₱1 reward is counted here so the same Arduino
+   counter value cannot pay repeatedly.
+========================================================= */
+
+let paidRewards =
+    Number(
+        localStorage.getItem("paidRewards")
+    ) || 0;
+
+
+/* =========================================================
    LAST ARDUINO COUNTERS
 ========================================================= */
 
@@ -1503,6 +1537,9 @@ let port = null;
 let reader = null;
 
 let buffer = "";
+
+/* Optional explicit PAY:/DEDUCT: amount received from Arduino. */
+let explicitSerialPayout = 0;
 
 
 /* =========================================================
@@ -1797,209 +1834,170 @@ function parseLine(line) {
 
     line = line.trim();
 
-
     if (!line) {
-
         return;
-
     }
 
+    let newC = lastSerial.cans;
+    let newB = lastSerial.bottles;
 
-    let newC =
-        lastSerial.cans;
+    line.split(",").forEach(part => {
 
+        const pieces = part.split(":");
 
-    let newB =
-        lastSerial.bottles;
-
-
-    let transactionValue = 0;
-
-
-    line.split(",").forEach(
-        part => {
-
-            const pieces =
-                part.split(":");
-
-
-            if (pieces.length < 2) {
-
-                return;
-
-            }
-
-
-            const key =
-                pieces[0].trim();
-
-
-            const value =
-                pieces
-                    .slice(1)
-                    .join(":")
-                    .trim();
-
-
-            /* -----------------------------
-               CANS
-            ----------------------------- */
-
-            if (key === "CANS") {
-
-                const parsed =
-                    parseInt(value);
-
-
-                if (!isNaN(parsed)) {
-
-                    newC = parsed;
-
-                }
-
-            }
-
-
-            /* -----------------------------
-               BOTTLES
-            ----------------------------- */
-
-            if (key === "BOTTLES") {
-
-                const parsed =
-                    parseInt(value);
-
-
-                if (!isNaN(parsed)) {
-
-                    newB = parsed;
-
-                }
-
-            }
-
-
-            /* -----------------------------
-               MODE
-            ----------------------------- */
-
-            if (key === "MODE") {
-
-                document.getElementById(
-                    "mode"
-                ).innerText = value;
-
-            }
-
-
-            /*
-                OPTIONAL TRANSACTION EVENT
-
-                If your Arduino sends:
-
-                    PAY:1
-
-                OR:
-
-                    DEDUCT:1
-
-                the system will deduct ₱1.
-
-                This is the recommended way
-                to communicate a payout.
-            */
-
-            if (
-                key === "PAY" ||
-                key === "DEDUCT"
-            ) {
-
-                const parsed =
-                    Number(value);
-
-
-                if (
-                    Number.isFinite(parsed) &&
-                    parsed > 0
-                ) {
-
-                    transactionValue +=
-                        parsed;
-
-                }
-
-            }
-
+        if (pieces.length < 2) {
+            return;
         }
-    );
 
+        const key = pieces[0].trim();
+        const value = pieces.slice(1).join(":").trim();
 
-    /* =====================================================
-       ADD ONLY NEW CANS
-    ===================================================== */
+        if (key === "CANS") {
+            const parsed = parseInt(value, 10);
+            if (!isNaN(parsed)) {
+                newC = parsed;
+            }
+        }
 
-    if (
-        newC >
-        lastSerial.cans
-    ) {
+        if (key === "BOTTLES") {
+            const parsed = parseInt(value, 10);
+            if (!isNaN(parsed)) {
+                newB = parsed;
+            }
+        }
 
-        inventory.cans +=
-            newC - lastSerial.cans;
+        if (key === "MODE") {
+            const mode = document.getElementById("mode");
+            if (mode) {
+                mode.innerText = value;
+            }
+        }
 
+        /*
+           Optional Arduino PAY:/DEDUCT: support is kept.
+           If Arduino explicitly sends a payout, it will be
+           processed below. Otherwise the automatic reward
+           logic uses the counter thresholds.
+        */
+        if (key === "PAY" || key === "DEDUCT") {
+            const parsed = Number(value);
+            if (Number.isFinite(parsed) && parsed > 0) {
+                explicitSerialPayout += parsed;
+            }
+        }
+    });
+
+    /* Handle Arduino counter reset without creating negative items. */
+    const cansReset = newC < lastSerial.cans;
+    const bottlesReset = newB < lastSerial.bottles;
+
+    if (cansReset) {
+        lastSerial.cans = 0;
+        localStorage.setItem("lastSerial", JSON.stringify(lastSerial));
     }
 
-
-    /* =====================================================
-       ADD ONLY NEW BOTTLES
-    ===================================================== */
-
-    if (
-        newB >
-        lastSerial.bottles
-    ) {
-
-        inventory.bottles +=
-            newB - lastSerial.bottles;
-
+    if (bottlesReset) {
+        lastSerial.bottles = 0;
+        localStorage.setItem("lastSerial", JSON.stringify(lastSerial));
     }
 
+    const previousCans = cansReset ? 0 : lastSerial.cans;
+    const previousBottles = bottlesReset ? 0 : lastSerial.bottles;
 
-    /* =====================================================
-       PROCESS PAYOUT
-    ===================================================== */
-
-    if (
-        transactionValue > 0
-    ) {
-
-        deductRecyclingAmount(
-            transactionValue
-        );
-
+    if (newC > previousCans) {
+        inventory.cans += newC - previousCans;
     }
 
+    if (newB > previousBottles) {
+        inventory.bottles += newB - previousBottles;
+    }
 
-    /* =====================================================
-       SAVE ARDUINO COUNTERS
-    ===================================================== */
+    /*
+       AUTOMATIC REWARD RULES
+
+       2 cans    = ₱1
+       3 bottles = ₱1
+
+       The reward is deducted from AVAILABLE hopper coins only.
+       hopperRecords remains unchanged.
+    */
+    processAutomaticRewards();
+
+    /* Process an explicit PAY:/DEDUCT: message if Arduino sends one. */
+    if (explicitSerialPayout > 0) {
+        const explicitAmount = explicitSerialPayout;
+        explicitSerialPayout = 0;
+        deductRecyclingAmount(explicitAmount);
+    }
 
     lastSerial = {
-
         cans: newC,
-
         bottles: newB
-
     };
-
 
     localStorage.setItem(
         "lastSerial",
         JSON.stringify(lastSerial)
     );
 
-
     updateUI();
+}
 
+
+/* =========================================================
+   AUTOMATIC RECYCLING REWARD
+
+   2 CANS    = ₱1
+   3 BOTTLES = ₱1
+
+   Only hopperCoins is reduced.
+   hopperRecords is NEVER reduced.
+========================================================= */
+
+function processAutomaticRewards() {
+
+    const canRewards = Math.floor(inventory.cans / 2);
+    const bottleRewards = Math.floor(inventory.bottles / 3);
+    const totalEarnedRewards = canRewards + bottleRewards;
+
+    const newRewards = totalEarnedRewards - paidRewards;
+
+    if (newRewards <= 0) {
+        return;
+    }
+
+    /* Pay only what is currently available in the hopper. */
+    const payableRewards = Math.min(
+        newRewards,
+        Math.floor(hopperCoins)
+    );
+
+    if (payableRewards <= 0) {
+        return;
+    }
+
+    hopperCoins -= payableRewards;
+
+    if (hopperCoins < 0) {
+        hopperCoins = 0;
+    }
+
+    localStorage.setItem(
+        "hopperCoins",
+        hopperCoins
+    );
+
+    /* Each ₱1 reward is one recycling payout transaction. */
+    for (let i = 0; i < payableRewards; i++) {
+        recordTransaction(1);
+    }
+
+    paidRewards += payableRewards;
+
+    localStorage.setItem(
+        "paidRewards",
+        paidRewards
+    );
 }
 
 
@@ -2408,65 +2406,70 @@ function updateQuickStats() {
         ₱100
 */
 
-function addManualCoin() {
+function recordHopperLoading(amount) {
 
-    const input =
-        document.getElementById(
-            "manualCoins"
-        );
+    amount = Number(amount);
 
-
-    const value =
-        Number(input.value);
-
-
-    if (
-        !Number.isFinite(value) ||
-        value <= 0
-    ) {
-
-        alert(
-            "Please enter a valid coin amount."
-        );
-
+    if (!Number.isFinite(amount) || amount <= 0) {
         return;
-
     }
 
+    const date = new Date().toISOString().split("T")[0];
 
-    /*
-        ADD TO HOPPER
-    */
+    if (!hopperRecords[date]) {
+        hopperRecords[date] = { loaded: 0 };
+    }
+
+    hopperRecords[date].loaded += amount;
+
+    localStorage.setItem(
+        "hopperRecords",
+        JSON.stringify(hopperRecords)
+    );
+}
+
+
+/* =========================================================
+   ADMIN ADD COINS
+========================================================= */
+
+function addManualCoin() {
+
+    const input = document.getElementById("manualCoins");
+    const value = Number(input.value);
+
+    if (!Number.isFinite(value) || value <= 0) {
+        alert("Please enter a valid coin amount.");
+        return;
+    }
 
     hopperCoins += value;
-
-
-    /*
-        SAVE
-    */
 
     localStorage.setItem(
         "hopperCoins",
         hopperCoins
     );
 
+    /*
+       IMPORTANT:
+       This records the amount loaded by admin.
+       It will NOT be reduced by recycling payouts.
+    */
+    recordHopperLoading(value);
+
+    /* If rewards were waiting because hopper was empty, pay them now. */
+    processAutomaticRewards();
 
     updateUI();
 
-
     alert(
         "✅ Hopper loaded successfully!\n\n" +
-
-        "Added: ₱" +
-        value.toFixed(2) +
-
-        "\n\nCurrent Hopper Balance: ₱" +
+        "Added: ₱" + value.toFixed(2) +
+        "\nCurrent Available Payout: ₱" +
         hopperCoins.toFixed(2)
     );
 
-
     input.value = "";
-
 }
 
 
@@ -2580,6 +2583,24 @@ function refreshData() {
             )
         ) || {};
 
+    transactionRecords =
+        JSON.parse(
+            localStorage.getItem(
+                "transactionRecords"
+            )
+        ) || {};
+
+    hopperRecords =
+        JSON.parse(
+            localStorage.getItem(
+                "hopperRecords"
+            )
+        ) || {};
+
+    paidRewards =
+        Number(
+            localStorage.getItem("paidRewards")
+        ) || 0;
 
     updateUI();
 
@@ -2706,223 +2727,65 @@ function showSummary() {
 
 function updateRecordUI() {
 
-    const table =
-        document.getElementById(
-            "recordList"
-        );
+    const table = document.getElementById("recordList");
 
+    if (!table) {
+        return;
+    }
 
     table.innerHTML = "";
 
-
     let totalCans = 0;
-
     let totalBottles = 0;
-
+    let totalHopperLoaded = 0;
     let totalTransactions = 0;
 
-
-    const dates =
-        Object.keys(
-            dailyRecords
-        ).sort();
-
-
-    dates.forEach(
-        date => {
-
-            const record =
-                dailyRecords[date];
-
-
-            const transactions =
-                transactionRecords[date]
-                    ? transactionRecords[date].transactions
-                    : 0;
-
-
-            totalCans +=
-                Number(record.cans || 0);
-
-
-            totalBottles +=
-                Number(record.bottles || 0);
-
-
-            totalTransactions +=
-                transactions;
-
-
-            table.innerHTML += `
-
-                <tr>
-
-                    <td>
-                        ${date}
-                    </td>
-
-                    <td>
-                        ${record.cans || 0}
-                    </td>
-
-                    <td>
-                        ${record.bottles || 0}
-                    </td>
-
-                    <td>
-                        ${transactions}
-                    </td>
-
-                </tr>
-
-            `;
-
-        }
-    );
-
-
-    document.getElementById(
-        "totalCans"
-    ).innerText =
-        totalCans;
-
-
-    document.getElementById(
-        "totalBottles"
-    ).innerText =
-        totalBottles;
-
-
-    document.getElementById(
-        "totalCoins"
-    ).innerText =
-        totalTransactions;
-
-}
-
-
-/* =========================================================
-   COPY TABLE
-========================================================= */
-
-function copyTableData() {
-
-    let tableData =
-        "Date,Cans,Bottles,Transactions\n";
-
-
-    Object.keys(
-        dailyRecords
-    ).forEach(
-        date => {
-
-            const record =
-                dailyRecords[date];
-
-
-            const transactions =
-                transactionRecords[date]
-                    ? transactionRecords[date].transactions
-                    : 0;
-
-
-            tableData +=
-                `${date},` +
-                `${record.cans || 0},` +
-                `${record.bottles || 0},` +
-                `${transactions}\n`;
-
-        }
-    );
-
-
-    navigator.clipboard
-        .writeText(tableData)
-        .then(() => {
-
-            alert(
-                "📋 Table data copied!"
-            );
-
-        });
-
-}
-
-
-/* =========================================================
-   RECORD SUMMARY
-========================================================= */
-
-function showRecordSummary() {
-
-    let cansTotal = 0;
-
-    let bottlesTotal = 0;
-
-    let transactionTotal = 0;
-
-
-    Object.keys(
-        dailyRecords
-    ).forEach(
-        date => {
-
-            const record =
-                dailyRecords[date];
-
-
-            cansTotal +=
-                Number(record.cans || 0);
-
-
-            bottlesTotal +=
-                Number(record.bottles || 0);
-
-
-            if (
-                transactionRecords[date]
-            ) {
-
-                transactionTotal +=
-                    Number(
-                        transactionRecords[date].transactions
-                    );
-
-            }
-
-        }
-    );
-
-
-    alert(
-        "📊 RECORD SUMMARY\n\n" +
-
-        "Total Cans: " +
-        cansTotal +
-
-        "\nTotal Bottles: " +
-        bottlesTotal +
-
-        "\nRecycling Transactions: " +
-        transactionTotal +
-
-        "\n\nCurrent Hopper: ₱" +
-        hopperCoins.toFixed(2)
-    );
-
-}
-
-
-/* =========================================================
-   CLEAR FILTER
-========================================================= */
-
-function clearFilters() {
-
-    alert(
-        "🔍 No filters applied."
-    );
-
+    /* Include dates that only contain hopper loading records. */
+    const dateSet = new Set([
+        ...Object.keys(dailyRecords),
+        ...Object.keys(hopperRecords),
+        ...Object.keys(transactionRecords)
+    ]);
+
+    const dates = Array.from(dateSet).sort();
+
+    dates.forEach(date => {
+
+        const record = dailyRecords[date] || { cans: 0, bottles: 0 };
+
+        const transactions = transactionRecords[date]
+            ? Number(transactionRecords[date].transactions || 0)
+            : 0;
+
+        const hopperLoaded = hopperRecords[date]
+            ? Number(hopperRecords[date].loaded || 0)
+            : 0;
+
+        totalCans += Number(record.cans || 0);
+        totalBottles += Number(record.bottles || 0);
+        totalHopperLoaded += hopperLoaded;
+        totalTransactions += transactions;
+
+        table.innerHTML += `
+            <tr>
+                <td>${date}</td>
+                <td>${record.cans || 0}</td>
+                <td>${record.bottles || 0}</td>
+                <td>₱${hopperLoaded.toFixed(2)}</td>
+                <td>${transactions}</td>
+            </tr>
+        `;
+    });
+
+    const totalCansElement = document.getElementById("totalCans");
+    const totalBottlesElement = document.getElementById("totalBottles");
+    const totalHopperLoadedElement = document.getElementById("totalHopperLoaded");
+    const totalCoinsElement = document.getElementById("totalCoins");
+
+    if (totalCansElement) totalCansElement.innerText = totalCans;
+    if (totalBottlesElement) totalBottlesElement.innerText = totalBottles;
+    if (totalHopperLoadedElement) totalHopperLoadedElement.innerText = "₱" + totalHopperLoaded.toFixed(2);
+    if (totalCoinsElement) totalCoinsElement.innerText = totalTransactions;
 }
 
 
@@ -2984,6 +2847,12 @@ function resetData() {
 
     transactionRecords = {};
 
+    hopperRecords = {};
+
+    paidRewards = 0;
+
+    explicitSerialPayout = 0;
+
 
     lastSerial = {
 
@@ -3012,6 +2881,14 @@ function resetData() {
 
     localStorage.removeItem(
         "transactionRecords"
+    );
+
+    localStorage.removeItem(
+        "hopperRecords"
+    );
+
+    localStorage.removeItem(
+        "paidRewards"
     );
 
 
@@ -3337,4 +3214,3 @@ function downloadReceipt() {
 
 </body>
 </html>
-
