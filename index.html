@@ -1,1408 +1,964 @@
-
 <!DOCTYPE html>
-<html lang="en">
 
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Smart Trash Bin Dashboard</title>
+<title>Trash2Cash - Smart Trash Bin Dashboard</title>
 
 <style>
-
-/* =========================================================
-   RESET & BASE
-========================================================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Segoe UI", sans-serif;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,sans-serif;
 }
 
-body {
-    background: url("BG SVNHS.jpg") no-repeat center center fixed;
-    background-size: cover;
-    color: #fff;
-    min-height: 100vh;
-    overflow-x: hidden;
+body{
+    min-height:100vh;
+    background:url("BG SVNHS.jpg") no-repeat center center fixed;
+    background-size:cover;
+    color:#fff;
+    overflow-x:hidden;
 }
 
-button {
-    cursor: pointer;
+button{
+    cursor:pointer;
 }
 
+input{
+    outline:none;
+}
 
-/* =========================================================
+/* =========================
    LOGIN
-========================================================= */
+========================= */
 
-#loginPage {
-    width: 100%;
-    max-width: 400px;
-    padding: 50px;
-    margin: auto;
-
-    border-radius: 25px;
-
-    background: rgba(0, 0, 0, 0.95);
-
-    text-align: center;
-
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
-
-    backdrop-filter: blur(10px);
-
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);
-
-    z-index: 9999;
+#loginPage{
+    width:90%;
+    max-width:400px;
+    padding:45px 35px;
+    background:rgba(0,0,0,.94);
+    border-radius:25px;
+    text-align:center;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 15px 40px rgba(0,0,0,.8);
+    z-index:9999;
 }
 
-#loginPage h2 {
-    font-size: 32px;
-    letter-spacing: 2px;
-    margin-bottom: 25px;
-
-    color: #00ffd5;
-
-    text-shadow:
-        0 0 20px rgba(0, 255, 213, 0.6);
+#loginPage h2{
+    color:#00ffd5;
+    font-size:30px;
+    margin-bottom:25px;
+    letter-spacing:2px;
 }
 
-#loginPage input {
-    width: 85%;
-
-    padding: 15px;
-
-    margin: 12px 0;
-
-    border-radius: 12px;
-    border: none;
-    outline: none;
-
-    font-size: 16px;
-
-    background: rgba(255, 255, 255, 0.1);
-
-    color: #fff;
-
-    transition: 0.3s;
+#loginPage input{
+    width:90%;
+    padding:14px;
+    margin:10px 0;
+    border:0;
+    border-radius:12px;
+    background:rgba(255,255,255,.12);
+    color:#fff;
+    font-size:16px;
 }
 
-#loginPage input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+#loginPage input::placeholder{
+    color:rgba(255,255,255,.7);
 }
 
-#loginPage input:focus {
-    background: rgba(255, 255, 255, 0.2);
-
-    box-shadow:
-        0 0 15px rgba(0, 255, 213, 0.7);
+#loginPage input:focus{
+    box-shadow:0 0 15px rgba(0,255,213,.7);
 }
 
-#loginPage button {
-    width: 90%;
-
-    padding: 15px;
-
-    margin-top: 20px;
-
-    border: none;
-
-    border-radius: 15px;
-
-    background:
-        linear-gradient(135deg, #00ffd5, #00c2ff);
-
-    color: #000;
-
-    font-weight: 700;
-
-    font-size: 18px;
-
-    transition: 0.3s;
+#loginPage button{
+    width:90%;
+    padding:14px;
+    margin-top:15px;
 }
 
-#loginPage button:hover {
-    transform: translateY(-3px);
-
-    box-shadow:
-        0 10px 25px rgba(0, 255, 213, 0.6);
-}
-
-
-/* =========================================================
+/* =========================
    MAIN
-========================================================= */
+========================= */
 
-#main {
-    display: none;
-
-    width: 100%;
-    height: 100vh;
-
-    flex-direction: row;
+#main{
+    display:none;
+    width:100%;
+    min-height:100vh;
 }
 
+/* =========================
+   SIDEBAR
+========================= */
 
-/* =========================================================
-   SIDE NAVIGATION
-========================================================= */
-
-#sideNav {
-    width: 250px;
-
-    background: rgba(0, 0, 0, 0.85);
-
-    padding: 20px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    box-shadow:
-        2px 0 20px rgba(0, 255, 213, 0.5);
+#sideNav{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:250px;
+    padding:20px;
+    background:rgba(0,0,0,.88);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    box-shadow:2px 0 20px rgba(0,255,213,.4);
+    z-index:100;
 }
 
-.schoolHeader {
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    margin-bottom: 15px;
+.schoolHeader{
+    text-align:center;
+    margin-bottom:20px;
 }
 
-.logoCircle {
-    width: 130px;
-    height: 130px;
-
-    border-radius: 50%;
-
-    background: #fff;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    overflow: hidden;
-
-    margin-bottom: 10px;
+.logoCircle{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:#fff;
+    overflow:hidden;
+    margin:auto auto 12px;
 }
 
-.logoCircle img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
+.logoCircle img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
 }
 
-.schoolName {
-    font-size: 14px;
-
-    font-weight: 700;
-
-    text-align: center;
-
-    margin-bottom: 30px;
-
-    line-height: 1.3;
-
-    color: #00ffd5;
-
-    text-shadow:
-        0 0 8px rgba(0, 255, 213, 0.5);
+.schoolName{
+    color:#00ffd5;
+    font-size:13px;
+    font-weight:700;
+    line-height:1.4;
 }
 
-.navBtn {
-    width: 100%;
-
-    padding: 15px;
-
-    margin: 10px 0;
-
-    border: none;
-
-    border-radius: 12px;
-
-    background: rgba(255, 255, 255, 0.05);
-
-    color: #00ffd5;
-
-    font-size: 16px;
-
-    font-weight: 700;
-
-    text-align: left;
-
-    padding-left: 20px;
-
-    transition: 0.3s;
+.navBtn{
+    width:100%;
+    padding:14px;
+    margin:6px 0;
+    border:0;
+    border-radius:12px;
+    background:rgba(255,255,255,.06);
+    color:#00ffd5;
+    font-size:15px;
+    font-weight:700;
+    text-align:left;
+    transition:.25s;
 }
 
-.navBtn:hover {
-    background:
-        linear-gradient(135deg, #00ffd5, #00c2ff);
-
-    color: #000;
-
-    transform: translateX(5px);
-
-    box-shadow:
-        0 5px 20px rgba(0, 255, 213, 0.5);
+.navBtn:hover{
+    background:linear-gradient(135deg,#00ffd5,#00c2ff);
+    color:#000;
+    transform:translateX(4px);
 }
 
-
-/* =========================================================
+/* =========================
    CONTENT
-========================================================= */
+========================= */
 
-#content {
-    flex: 1;
-
-    padding: 40px 50px;
-
-    overflow-y: auto;
-
-    background: rgba(0, 0, 0, 0.3);
-
-    backdrop-filter: blur(5px);
+#content{
+    margin-left:250px;
+    min-height:100vh;
+    padding:35px;
+    background:rgba(0,0,0,.3);
+    backdrop-filter:blur(5px);
 }
 
-#content h1 {
-    text-align: center;
-
-    font-size: 36px;
-
-    letter-spacing: 3px;
-
-    color: #00ffd5;
-
-    margin-bottom: 30px;
-
-    text-shadow:
-        0 0 20px rgba(0, 255, 213, 0.6);
+#content h1{
+    text-align:center;
+    color:#00ffd5;
+    font-size:34px;
+    letter-spacing:3px;
+    margin-bottom:25px;
+    text-shadow:0 0 20px rgba(0,255,213,.6);
 }
 
-#content h2 {
-    text-align: center;
-
-    margin-bottom: 25px;
-
-    color: #00ffd5;
+#content h2{
+    text-align:center;
+    color:#00ffd5;
+    margin-bottom:25px;
 }
 
-
-/* =========================================================
-   CARDS
-========================================================= */
-
-.card {
-    background: rgba(255, 255, 255, 0.95);
-
-    padding: 20px;
-
-    border-radius: 14px;
-
-    box-shadow:
-        0 8px 20px rgba(0, 0, 0, 0.15);
-
-    margin-bottom: 20px;
-}
-
-
-/* =========================================================
-   STATS
-========================================================= */
-
-.stats {
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit, minmax(200px, 1fr));
-
-    gap: 20px;
-
-    margin-bottom: 30px;
-}
-
-.stat {
-    padding: 25px;
-
-    border-radius: 20px;
-
-    background: rgba(0, 0, 0, 0.2);
-
-    box-shadow:
-        0 0 20px rgba(0, 255, 213, 0.3);
-
-    text-align: center;
-
-    transition: 0.5s;
-
-    position: relative;
-
-    overflow: hidden;
-}
-
-.stat:hover {
-    transform: scale(1.04);
-
-    box-shadow:
-        0 0 30px rgba(0, 255, 213, 0.6);
-}
-
-.stat-title {
-    font-size: 14px;
-
-    letter-spacing: 2px;
-
-    opacity: 0.8;
-
-    text-transform: uppercase;
-}
-
-.stat-value {
-    font-size: 36px;
-
-    font-weight: 700;
-
-    margin-top: 10px;
-
-    color: #00ffd5;
-
-    text-shadow:
-        0 0 15px rgba(0, 255, 213, 0.7);
-}
-
-.stat small {
-    display: block;
-
-    margin-top: 8px;
-
-    opacity: 0.7;
-}
-
-
-/* =========================================================
-   QUICK STATS
-========================================================= */
-
-.quickStats {
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit, minmax(120px, 1fr));
-
-    gap: 10px;
-
-    margin: 15px 0;
-
-    padding: 15px;
-
-    background:
-        rgba(0, 255, 213, 0.1);
-
-    border-radius: 12px;
-
-    border:
-        1px solid rgba(0, 255, 213, 0.3);
-}
-
-.quickStat {
-    text-align: center;
-
-    font-weight: bold;
-
-    color: #00ffd5;
-}
-
-
-/* =========================================================
-   MODE
-========================================================= */
-
-.mode-box {
-    margin-bottom: 30px;
-
-    padding: 20px;
-
-    border-radius: 20px;
-
-    background:
-        linear-gradient(135deg, #00ffd5, #00c2ff);
-
-    color: #000;
-
-    font-weight: 700;
-
-    font-size: 22px;
-
-    letter-spacing: 2px;
-
-    box-shadow:
-        0 10px 25px rgba(0, 255, 213, 0.4);
-
-    text-align: center;
-}
-
-
-/* =========================================================
+/* =========================
    BUTTONS
-========================================================= */
+========================= */
 
-button.aestheticBtn {
-    background:
-        linear-gradient(135deg, #00ffd5, #00c2ff);
-
-    border: none;
-
-    padding: 15px 25px;
-
-    border-radius: 15px;
-
-    color: #000;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-    font-size: 16px;
-
-    transition: 0.3s;
+.aestheticBtn{
+    border:0;
+    padding:14px 25px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#00ffd5,#00c2ff);
+    color:#000;
+    font-weight:700;
+    font-size:16px;
+    transition:.25s;
 }
 
-button.aestheticBtn:hover {
-    transform: translateY(-3px);
-
-    box-shadow:
-        0 10px 25px rgba(0, 255, 213, 0.6);
+.aestheticBtn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(0,255,213,.5);
 }
 
+/* =========================
+   QUICK STATS
+========================= */
 
-/* =========================================================
+.quickStats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px;
+    margin-bottom:25px;
+}
+
+.quickStat{
+    padding:15px;
+    text-align:center;
+    border-radius:12px;
+    background:rgba(0,255,213,.1);
+    border:1px solid rgba(0,255,213,.3);
+    color:#00ffd5;
+    font-weight:700;
+}
+
+/* =========================
+   STAT CARDS
+========================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat{
+    padding:25px 15px;
+    border-radius:20px;
+    background:rgba(0,0,0,.35);
+    text-align:center;
+    box-shadow:0 0 20px rgba(0,255,213,.25);
+    transition:.25s;
+}
+
+.stat:hover{
+    transform:translateY(-4px);
+    box-shadow:0 0 30px rgba(0,255,213,.5);
+}
+
+.stat-title{
+    font-size:13px;
+    letter-spacing:2px;
+    opacity:.8;
+}
+
+.stat-value{
+    margin-top:10px;
+    font-size:36px;
+    font-weight:700;
+    color:#00ffd5;
+}
+
+.stat small{
+    display:block;
+    margin-top:7px;
+    opacity:.7;
+}
+
+/* =========================
+   MODE
+========================= */
+
+.mode-box{
+    padding:20px;
+    margin-bottom:25px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#00ffd5,#00c2ff);
+    color:#000;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:2px;
+}
+
+/* =========================
    HELPFUL BUTTONS
-========================================================= */
+========================= */
 
-.helpfulBtns {
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit, minmax(180px, 1fr));
-
-    gap: 15px;
-
-    margin: 20px 0;
+.helpfulBtns{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:12px;
+    margin:20px 0;
 }
 
-.helpBtn {
-    padding: 12px 20px;
-
-    border: none;
-
-    border-radius: 12px;
-
-    color: #fff;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-    font-size: 14px;
-
-    transition: all 0.3s;
-
-    box-shadow:
-        0 4px 15px rgba(0, 0, 0, 0.3);
+.helpBtn{
+    border:0;
+    padding:13px 15px;
+    border-radius:12px;
+    color:#fff;
+    font-weight:700;
+    transition:.25s;
 }
 
-.helpBtn:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 6px 20px rgba(0, 255, 213, 0.4);
+.helpBtn:hover{
+    transform:translateY(-2px);
 }
 
-.btn-clear {
-    background:
-        linear-gradient(135deg, #ff9800, #ffb74d);
+.btn-clear{
+    background:linear-gradient(135deg,#ff9800,#ffb74d);
 }
 
-.btn-copy {
-    background:
-        linear-gradient(135deg, #9c27b0, #ba68c8);
+.btn-copy{
+    background:linear-gradient(135deg,#9c27b0,#ba68c8);
 }
 
-.btn-refresh {
-    background:
-        linear-gradient(135deg, #00bcd4, #4dd0e1);
+.btn-refresh{
+    background:linear-gradient(135deg,#00bcd4,#4dd0e1);
 }
 
-.btn-export {
-    background:
-        linear-gradient(135deg, #4caf50, #81c784);
+.btn-export{
+    background:linear-gradient(135deg,#4caf50,#81c784);
 }
 
-.btn-print {
-    background:
-        linear-gradient(135deg, #607d8b, #90a4ae);
+.btn-print{
+    background:linear-gradient(135deg,#607d8b,#90a4ae);
 }
 
-.btn-summary {
-    background:
-        linear-gradient(135deg, #e91e63, #f06292);
+.btn-summary{
+    background:linear-gradient(135deg,#e91e63,#f06292);
 }
 
+/* =========================
+   ADMIN
+========================= */
 
-/* =========================================================
-   ADMIN PANEL
-========================================================= */
-
-#adminPanel {
-    background: rgba(0, 0, 0, 0.5);
-
-    padding: 20px;
-
-    border-radius: 20px;
-
-    margin-top: 20px;
-
-    box-shadow:
-        0 0 15px rgba(0, 255, 213, 0.2);
+.adminGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:18px;
 }
 
-.adminGrid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fit, minmax(250px, 1fr));
-
-    gap: 20px;
+.card{
+    padding:20px;
+    border-radius:16px;
+    background:rgba(255,255,255,.95);
+    color:#000;
+    box-shadow:0 8px 20px rgba(0,0,0,.2);
 }
 
-.adminBox h4 {
-    color: #2e7d32;
-
-    margin-bottom: 10px;
+.adminBox h4{
+    color:#2e7d32;
+    margin-bottom:12px;
 }
 
-.adminBox input {
-    width: 100%;
-
-    padding: 10px;
-
-    border-radius: 8px;
-
-    border: 1px solid #aaa;
-
-    margin-bottom: 10px;
-
-    color: #000;
+.adminBox input{
+    width:100%;
+    padding:12px;
+    margin-bottom:10px;
+    border:1px solid #aaa;
+    border-radius:8px;
+    color:#000;
 }
 
-.adminBox button {
-    width: 100%;
-
-    padding: 12px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: #2e7d32;
-
-    color: #fff;
-
-    font-weight: bold;
-
-    cursor: pointer;
+.adminBox button:not(.helpBtn){
+    width:100%;
+    padding:12px;
+    border:0;
+    border-radius:10px;
+    background:#2e7d32;
+    color:#fff;
+    font-weight:700;
 }
 
-.adminBox button:hover {
-    background: #1b5e20;
+.adminBox button:not(.helpBtn):hover{
+    background:#1b5e20;
 }
 
-.dangerBtn {
-    background: #c62828 !important;
+.dangerBtn{
+    background:#c62828!important;
 }
 
-.dangerBtn:hover {
-    background: #8e0000 !important;
+.dangerBtn:hover{
+    background:#8e0000!important;
 }
 
+/* =========================
+   HOPPER
+========================= */
 
-/* =========================================================
-   HOPPER STATUS
-========================================================= */
-
-.hopperStatus {
-    margin-top: 20px;
-
-    padding: 20px;
-
-    border-radius: 15px;
-
-    background:
-        rgba(0, 255, 213, 0.1);
-
-    border:
-        1px solid rgba(0, 255, 213, 0.3);
-
-    text-align: center;
+.hopperStatus{
+    margin-top:20px;
+    padding:25px;
+    border-radius:16px;
+    text-align:center;
+    background:rgba(0,255,213,.1);
+    border:1px solid rgba(0,255,213,.3);
 }
 
-.hopperStatus h3 {
-    color: #00ffd5;
-
-    margin-bottom: 10px;
+.hopperStatus h3{
+    color:#00ffd5;
+    margin-bottom:10px;
 }
 
-.hopperBalance {
-    font-size: 40px;
-
-    font-weight: bold;
-
-    color: #00ffd5;
-
-    text-shadow:
-        0 0 15px rgba(0, 255, 213, 0.7);
+.hopperBalance{
+    color:#00ffd5;
+    font-size:42px;
+    font-weight:700;
 }
 
-
-/* =========================================================
+/* =========================
    RECORDS
-========================================================= */
+========================= */
 
-.recordsCard {
-    overflow-x: auto;
+.recordsCard{
+    overflow-x:auto;
 }
 
-.recordsCard table {
-    width: 100%;
-
-    border-collapse: collapse;
-
-    font-size: 15px;
-
-    color: #000;
+.recordsCard table{
+    width:100%;
+    border-collapse:collapse;
+    color:#000;
 }
 
-.recordsCard th {
-    background: #2e7d32;
-
-    color: #fff;
-
-    padding: 12px;
-
-    font-weight: bold;
+.recordsCard th{
+    padding:12px;
+    background:#2e7d32;
+    color:#fff;
 }
 
-.recordsCard td {
-    padding: 10px;
-
-    text-align: center;
-
-    border-bottom: 1px solid #ccc;
-
-    font-weight: 600;
+.recordsCard td{
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #ccc;
+    font-weight:600;
 }
 
-.recordsCard tbody tr:nth-child(even) {
-    background: #f1f8f4;
+.recordsCard tbody tr:nth-child(even){
+    background:#f1f8f4;
 }
 
-.recordsCard tbody tr:nth-child(odd) {
-    background: #ffffff;
+.recordsCard tbody tr:nth-child(odd){
+    background:#fff;
 }
 
-.recordsCard tfoot {
-    background: #c8e6c9;
-
-    font-weight: bold;
+.recordsCard tfoot{
+    background:#c8e6c9;
 }
 
-.recordsCard tfoot td {
-    padding: 12px;
-
-    font-size: 16px;
+.downloadBtn{
+    margin-top:15px;
+    padding:12px 20px;
+    border:0;
+    border-radius:10px;
+    background:#1976d2;
+    color:#fff;
+    font-weight:700;
 }
 
-
-/* =========================================================
-   DOWNLOAD
-========================================================= */
-
-.downloadBtn {
-    margin-top: 15px;
-
-    padding: 12px 20px;
-
-    background: #1976d2;
-
-    color: #fff;
-
-    border: none;
-
-    border-radius: 10px;
-
-    cursor: pointer;
-
-    font-weight: bold;
-}
-
-.downloadBtn:hover {
-    background: #0d47a1;
-}
-
-
-/* =========================================================
+/* =========================
    FOOTER
-========================================================= */
+========================= */
 
-.footer {
-    margin-top: 40px;
-
-    font-size: 14px;
-
-    opacity: 0.6;
-
-    letter-spacing: 1px;
-
-    text-align: center;
+.footer{
+    margin-top:40px;
+    text-align:center;
+    opacity:.6;
+    font-size:13px;
 }
 
-
-/* =========================================================
+/* =========================
    RESPONSIVE
-========================================================= */
+========================= */
 
-@media (max-width: 768px) {
+@media(max-width:768px){
 
-    #content {
-        padding: 20px;
+    #sideNav{
+        position:relative;
+        width:100%;
+        min-height:auto;
     }
 
-    #sideNav {
-        width: 200px;
-
-        padding: 10px;
+    #main{
+        display:none;
+        flex-direction:column;
     }
 
-    .stats {
-        grid-template-columns: 1fr;
+    #content{
+        margin-left:0;
+        padding:20px;
     }
 
-    #content h1 {
-        font-size: 28px;
+    .stats{
+        grid-template-columns:1fr 1fr;
     }
 }
 
-</style>
-</head>
+@media(max-width:500px){
 
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    #content h1{
+        font-size:25px;
+    }
+}
+</style>
+
+</head>
 
 <body>
 
-
-<!-- =======================================================
+<!-- =========================
      LOGIN
-======================================================= -->
+========================= -->
 
 <div id="loginPage">
 
-    <h2>Admin Login</h2>
+```
+<h2>Admin Login</h2>
 
-    <input
-        type="text"
-        id="username"
-        placeholder="Username"
-    >
+<input
+    type="text"
+    id="username"
+    placeholder="Username"
+>
 
-    <br>
+<input
+    type="password"
+    id="password"
+    placeholder="Password"
+>
 
-    <input
-        type="password"
-        id="password"
-        placeholder="Password"
-    >
-
-    <br>
-
-    <button
-        class="aestheticBtn"
-        onclick="login()"
-    >
-        Login
-    </button>
+<button
+    class="aestheticBtn"
+    onclick="login()"
+>
+    Login
+</button>
+```
 
 </div>
 
-
-<!-- =======================================================
+<!-- =========================
      MAIN SYSTEM
-======================================================= -->
+========================= -->
 
-<div id="main" style="display:none;">
+<div id="main">
 
-
-<!-- =======================================================
-     SIDE NAVIGATION
-======================================================= -->
+```
+<!-- SIDEBAR -->
 
 <div id="sideNav">
 
     <div class="schoolHeader">
 
         <div class="logoCircle">
-
             <img
                 id="schoolLogo"
                 src="SVNHS.jpg"
                 alt="School Logo"
             >
-
         </div>
 
         <div class="schoolName">
-
             SAN VICENTE NATIONAL HIGH SCHOOL
             <br>
-
             TRASH2CASH SYSTEM
-
         </div>
 
     </div>
-
 
     <button
         class="navBtn"
         onclick="showSection('dashboardSec')"
     >
-        Dashboard
+        📊 Dashboard
     </button>
-
 
     <button
         class="navBtn"
         onclick="showSection('adminSec')"
     >
-        Admin Panel
+        ⚙️ Admin Panel
     </button>
-
 
     <button
         class="navBtn"
         onclick="showSection('recordsSec')"
     >
-        Records
+        📋 Records
     </button>
-
 
     <button
         class="navBtn"
         onclick="logout()"
     >
-        Logout
+        🚪 Logout
     </button>
 
 </div>
 
-
-<!-- =======================================================
-     CONTENT
-======================================================= -->
+<!-- CONTENT -->
 
 <div id="content">
 
+    <!-- DASHBOARD -->
 
-<!-- =======================================================
-     DASHBOARD
-======================================================= -->
+    <div id="dashboardSec">
 
-<div id="dashboardSec">
+        <h1>SMART TRASH BIN</h1>
 
-    <h1>SMART TRASH BIN</h1>
+        <div class="quickStats">
 
-
-    <!-- QUICK STATS -->
-
-    <div class="quickStats">
-
-        <div class="quickStat">
-            Today:
-            <span id="todayTotal">0</span>
-        </div>
-
-        <div class="quickStat">
-            Weekly:
-            <span id="weekTotal">0</span>
-        </div>
-
-        <div class="quickStat">
-            Value:
-            ₱<span id="totalValue">0.00</span>
-        </div>
-
-        <div class="quickStat">
-            Rate:
-            <span id="collectionRate">0/hr</span>
-        </div>
-
-    </div>
-
-
-    <!-- MAIN STAT CARDS -->
-
-    <div class="stats">
-
-
-        <div class="stat">
-
-            <div class="stat-title">
-                CANS
+            <div class="quickStat">
+                Today:
+                <span id="todayTotal">0</span>
             </div>
 
-            <div
-                class="stat-value"
-                id="cans"
+            <div class="quickStat">
+                Weekly:
+                <span id="weekTotal">0</span>
+            </div>
+
+            <div class="quickStat">
+                Value:
+                ₱<span id="totalValue">0.00</span>
+            </div>
+
+            <div class="quickStat">
+                Rate:
+                <span id="collectionRate">0/hr</span>
+            </div>
+
+        </div>
+
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-title">CANS</div>
+                <div
+                    class="stat-value"
+                    id="cans"
+                >0</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">BOTTLES</div>
+                <div
+                    class="stat-value"
+                    id="bottles"
+                >0</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">
+                    HOPPER COINS
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="coins"
+                >0.00</div>
+
+                <small>
+                    Current available payout
+                </small>
+            </div>
+
+            <div class="stat">
+                <div class="stat-title">
+                    TOTAL ITEMS
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="total"
+                >0</div>
+            </div>
+
+        </div>
+
+        <div class="mode-box">
+            MODE:
+            <span id="mode">IDLE</span>
+        </div>
+
+        <div class="helpfulBtns">
+
+            <button
+                class="helpBtn btn-refresh"
+                onclick="refreshData()"
             >
-                0
-            </div>
+                🔄 Refresh Data
+            </button>
 
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-title">
-                BOTTLES
-            </div>
-
-            <div
-                class="stat-value"
-                id="bottles"
+            <button
+                class="helpBtn btn-copy"
+                onclick="copyStats()"
             >
-                0
-            </div>
+                📋 Copy Stats
+            </button>
 
-        </div>
-
-
-        <!-- HOPPER -->
-
-        <div class="stat">
-
-            <div class="stat-title">
-                HOPPER COINS
-            </div>
-
-            <div
-                class="stat-value"
-                id="coins"
+            <button
+                class="helpBtn btn-clear"
+                onclick="clearInputs()"
             >
-                0
-            </div>
+                🧹 Clear Inputs
+            </button>
 
-            <small>
-                Available payout balance
-            </small>
-
-        </div>
-
-
-        <div class="stat">
-
-            <div class="stat-title">
-                TOTAL ITEMS
-            </div>
-
-            <div
-                class="stat-value"
-                id="total"
+            <button
+                class="helpBtn btn-summary"
+                onclick="showSummary()"
             >
-                0
-            </div>
+                📊 Quick Summary
+            </button>
 
         </div>
-
-    </div>
-
-
-    <!-- MODE -->
-
-    <div class="mode-box">
-
-        MODE:
-        <span id="mode">
-            IDLE
-        </span>
-
-    </div>
-
-
-    <!-- HELPFUL BUTTONS -->
-
-    <div class="helpfulBtns">
 
         <button
-            class="helpBtn btn-refresh"
-            onclick="refreshData()"
+            class="aestheticBtn"
+            onclick="connectSerial()"
         >
-            🔄 Refresh Data
-        </button>
-
-
-        <button
-            class="helpBtn btn-copy"
-            onclick="copyStats()"
-        >
-            📋 Copy Stats
-        </button>
-
-
-        <button
-            class="helpBtn btn-clear"
-            onclick="clearInputs()"
-        >
-            🧹 Clear Inputs
-        </button>
-
-
-        <button
-            class="helpBtn btn-summary"
-            onclick="showSummary()"
-        >
-            📊 Quick Summary
+            🔌 CONNECT ARDUINO
         </button>
 
     </div>
 
+    <!-- ADMIN PANEL -->
 
-    <button
-        class="aestheticBtn"
-        onclick="connectSerial()"
+    <div
+        id="adminSec"
+        style="display:none"
     >
-        CONNECT ARDUINO
-    </button>
 
-</div>
+        <h2>Admin Controls</h2>
 
+        <div class="adminGrid">
 
-<!-- =======================================================
-     ADMIN PANEL
-======================================================= -->
+            <div class="card adminBox">
 
-<div
-    id="adminSec"
-    style="display:none;"
->
+                <h4>
+                    Register / Add Hopper Coins
+                </h4>
 
-    <h2>Admin Controls</h2>
-
-
-    <div class="adminGrid">
-
-
-        <!-- ADD COINS -->
-
-        <div class="card adminBox">
-
-            <h4>
-                Register / Add Hopper Coins
-            </h4>
-
-            <input
-                type="number"
-                id="manualCoins"
-                min="0"
-                step="1"
-                placeholder="Example: 100"
-            >
-
-            <button
-                onclick="addManualCoin()"
-            >
-                Add Coins
-            </button>
-
-        </div>
-
-
-        <!-- DEDUCT COINS -->
-
-        <div class="card adminBox">
-
-            <h4>
-                Manual Deduct
-            </h4>
-
-            <input
-                type="number"
-                id="deductCoins"
-                min="0"
-                step="1"
-                placeholder="Amount"
-            >
-
-            <button
-                onclick="deductManualCoin()"
-            >
-                Deduct Coins
-            </button>
-
-        </div>
-
-
-        <!-- QUICK ACTIONS -->
-
-        <div class="card adminBox">
-
-            <h4>
-                Quick Actions
-            </h4>
-
-            <div
-                class="helpfulBtns"
-                style="
-                    grid-template-columns:1fr;
-                    gap:8px;
-                "
-            >
+                <input
+                    type="number"
+                    id="manualCoins"
+                    min="0"
+                    step="1"
+                    placeholder="Example: 100"
+                >
 
                 <button
-                    class="helpBtn btn-clear"
-                    onclick="clearAllInputs()"
+                    onclick="addManualCoin()"
                 >
-                    🧹 Clear All
+                    Add Coins
                 </button>
 
+            </div>
+
+            <div class="card adminBox">
+
+                <h4>
+                    Manual Deduct
+                </h4>
+
+                <input
+                    type="number"
+                    id="deductCoins"
+                    min="0"
+                    step="1"
+                    placeholder="Amount"
+                >
 
                 <button
-                    class="helpBtn btn-refresh"
-                    onclick="refreshData()"
+                    onclick="deductManualCoin()"
                 >
-                    🔄 Refresh
+                    Deduct Coins
+                </button>
+
+            </div>
+
+            <div class="card adminBox">
+
+                <h4>
+                    Quick Actions
+                </h4>
+
+                <div
+                    class="helpfulBtns"
+                    style="grid-template-columns:1fr"
+                >
+
+                    <button
+                        class="helpBtn btn-clear"
+                        onclick="clearAllInputs()"
+                    >
+                        🧹 Clear All
+                    </button>
+
+                    <button
+                        class="helpBtn btn-refresh"
+                        onclick="refreshData()"
+                    >
+                        🔄 Refresh
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="card adminBox">
+
+                <h4>
+                    System Control
+                </h4>
+
+                <button
+                    class="dangerBtn"
+                    onclick="resetData()"
+                >
+                    RESET ALL DATA
                 </button>
 
             </div>
 
         </div>
 
+        <div class="hopperStatus">
 
-        <!-- SYSTEM CONTROL -->
+            <h3>
+                CURRENT HOPPER BALANCE
+            </h3>
 
-        <div class="card adminBox">
+            <div class="hopperBalance">
+                ₱<span id="adminHopperBalance">0.00</span>
+            </div>
 
-            <h4>
-                System Control
-            </h4>
+            <p>
+                Current amount available for recycling payouts.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- RECORDS -->
+
+    <div
+        id="recordsSec"
+        style="display:none"
+    >
+
+        <h2>Daily Records</h2>
+
+        <div class="helpfulBtns">
 
             <button
-                class="dangerBtn"
-                onclick="resetData()"
+                class="helpBtn btn-export"
+                onclick="downloadReceipt()"
             >
-                RESET ALL DATA
+                📥 Download PNG
+            </button>
+
+            <button
+                class="helpBtn btn-print"
+                onclick="printTable()"
+            >
+                🖨️ Print Table
+            </button>
+
+            <button
+                class="helpBtn btn-copy"
+                onclick="copyTableData()"
+            >
+                📋 Copy Table
+            </button>
+
+            <button
+                class="helpBtn btn-summary"
+                onclick="showRecordSummary()"
+            >
+                📊 Summary
+            </button>
+
+            <button
+                class="helpBtn btn-clear"
+                onclick="clearFilters()"
+            >
+                🔍 Clear Filter
+            </button>
+
+        </div>
+
+        <div class="card recordsCard">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Cans</th>
+                        <th>Bottles</th>
+                        <th>Hopper Loaded</th>
+                        <th>Recycling Payouts</th>
+                    </tr>
+                </thead>
+
+                <tbody id="recordList"></tbody>
+
+                <tfoot>
+
+                    <tr>
+
+                        <td>Total</td>
+
+                        <td id="totalCans">0</td>
+
+                        <td id="totalBottles">0</td>
+
+                        <td id="totalHopperLoaded">
+                            ₱0.00
+                        </td>
+
+                        <td id="totalCoins">
+                            0
+                        </td>
+
+                    </tr>
+
+                </tfoot>
+
+            </table>
+
+            <button
+                class="downloadBtn"
+                onclick="downloadReceipt()"
+            >
+                Download Receipt
             </button>
 
         </div>
 
     </div>
 
-
-    <!-- HOPPER STATUS -->
-
-    <div class="hopperStatus">
-
-        <h3>
-            CURRENT HOPPER BALANCE
-        </h3>
-
-        <div class="hopperBalance">
-
-            ₱<span id="adminHopperBalance">
-                0.00
-            </span>
-
-        </div>
-
-        <p>
-            This is the amount currently available
-            for recycling payouts.
-        </p>
-
+    <div class="footer">
+        JV STUDIO • ARDUINO UNO • TRASH2CASH
     </div>
 
 </div>
-
-
-<!-- =======================================================
-     RECORDS
-======================================================= -->
-
-<div
-    id="recordsSec"
-    style="display:none;"
->
-
-    <h2>
-        Daily Records
-    </h2>
-
-
-    <div class="helpfulBtns">
-
-        <button
-            class="helpBtn btn-export"
-            onclick="downloadReceipt()"
-        >
-            📥 Download PNG
-        </button>
-
-
-        <button
-            class="helpBtn btn-print"
-            onclick="printTable()"
-        >
-            🖨️ Print Table
-        </button>
-
-
-        <button
-            class="helpBtn btn-copy"
-            onclick="copyTableData()"
-        >
-            📋 Copy Table
-        </button>
-
-
-        <button
-            class="helpBtn btn-summary"
-            onclick="showRecordSummary()"
-        >
-            📊 Summary
-        </button>
-
-
-        <button
-            class="helpBtn btn-clear"
-            onclick="clearFilters()"
-        >
-            🔍 Clear Filter
-        </button>
-
-    </div>
-
-
-    <div class="card recordsCard">
-
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>
-                        Date
-                    </th>
-
-                    <th>
-                        Cans
-                    </th>
-
-                    <th>
-                        Bottles
-                    </th>
-
-                    <th>
-                        Hopper Loaded
-                    </th>
-
-                    <th>
-                        Recycling Payouts
-                    </th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody id="recordList">
-            </tbody>
-
-
-            <tfoot>
-
-                <tr>
-
-                    <td>
-                        Total
-                    </td>
-
-                    <td id="totalCans">
-                        0
-                    </td>
-
-                    <td id="totalBottles">
-                        0
-                    </td>
-
-                    <td id="totalHopperLoaded">
-                        ₱0.00
-                    </td>
-
-                    <td id="totalCoins">
-                        0
-                    </td>
-
-                </tr>
-
-            </tfoot>
-
-        </table>
-
-
-        <button
-            class="downloadBtn"
-            onclick="downloadReceipt()"
-        >
-            Download Receipt
-        </button>
-
-    </div>
+```
 
 </div>
-
-
-<div class="footer">
-
-    JV STUDIO • ARDUINO UNO
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<!-- =======================================================
-     CRYPTO JS
-======================================================= -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-
 
 <script>
 
@@ -1420,45 +976,15 @@ const ADMIN_PASS_HASH =
    INVENTORY
 ========================================================= */
 
-/*
-    IMPORTANT:
-
-    inventory.cans
-        = total cans recycled
-
-    inventory.bottles
-        = total bottles recycled
-
-    hopperCoins
-        = ACTUAL COINS CURRENTLY INSIDE THE HOPPER
-
-    hopperCoins is completely separate from Arduino COINS.
-*/
-
 let inventory = {
-
-    cans:
-        Number(localStorage.getItem("cans")) || 0,
-
-    bottles:
-        Number(localStorage.getItem("bottles")) || 0
-
+    cans: Number(localStorage.getItem("cans")) || 0,
+    bottles: Number(localStorage.getItem("bottles")) || 0
 };
 
 
-/*
-    Load hopper balance.
-
-    Example:
-
-    Admin previously registered 100
-
-    localStorage:
-        hopperCoins = 100
-
-    After page refresh:
-        hopperCoins = 100
-*/
+/* =========================================================
+   ACTUAL HOPPER BALANCE
+========================================================= */
 
 let hopperCoins =
     Number(localStorage.getItem("hopperCoins")) || 0;
@@ -1474,11 +1000,9 @@ let dailyRecords =
     ) || {};
 
 
-/*
-    Number of recycling transactions.
-
-    This is NOT the hopper balance.
-*/
+/* =========================================================
+   TRANSACTION RECORDS
+========================================================= */
 
 let transactionRecords =
     JSON.parse(
@@ -1488,9 +1012,6 @@ let transactionRecords =
 
 /* =========================================================
    HOPPER LOADING RECORDS
-
-   Stores the ORIGINAL amount registered/added by admin.
-   This NEVER decreases when recycling payouts happen.
 ========================================================= */
 
 let hopperRecords =
@@ -1500,16 +1021,25 @@ let hopperRecords =
 
 
 /* =========================================================
-   REWARDS ALREADY PAID
+   PAID REWARDS
+=========================================================
 
-   Every ₱1 reward is counted here so the same Arduino
-   counter value cannot pay repeatedly.
+   This prevents the same cans/bottles from being paid
+   repeatedly.
+
+   Example:
+
+   2 cans = 1 reward
+
+   paidRewards = 1
+
+   Arduino keeps sending CANS:2
+
+   System will NOT pay another peso.
 ========================================================= */
 
 let paidRewards =
-    Number(
-        localStorage.getItem("paidRewards")
-    ) || 0;
+    Number(localStorage.getItem("paidRewards")) || 0;
 
 
 /* =========================================================
@@ -1520,11 +1050,8 @@ let lastSerial =
     JSON.parse(
         localStorage.getItem("lastSerial")
     ) || {
-
-        cans: 0,
-
-        bottles: 0
-
+        cans:0,
+        bottles:0
     };
 
 
@@ -1533,20 +1060,15 @@ let lastSerial =
 ========================================================= */
 
 let port = null;
-
 let reader = null;
-
 let buffer = "";
-
-/* Optional explicit PAY:/DEDUCT: amount received from Arduino. */
-let explicitSerialPayout = 0;
 
 
 /* =========================================================
    LOGIN
 ========================================================= */
 
-function login() {
+function login(){
 
     const user =
         document.getElementById("username").value.trim();
@@ -1554,11 +1076,13 @@ function login() {
     const pass =
         document.getElementById("password").value.trim();
 
+    const hash =
+        CryptoJS.SHA256(pass).toString();
 
-    if (
+    if(
         user === ADMIN_USER &&
-        CryptoJS.SHA256(pass).toString() === ADMIN_PASS_HASH
-    ) {
+        hash === ADMIN_PASS_HASH
+    ){
 
         localStorage.setItem(
             "loggedIn",
@@ -1569,24 +1093,17 @@ function login() {
             "loginPage"
         ).style.display = "none";
 
-
         document.getElementById(
             "main"
         ).style.display = "flex";
 
-
         updateUI();
 
-    }
+    }else{
 
-    else {
-
-        alert(
-            "Invalid credentials."
-        );
+        alert("Invalid username or password.");
 
     }
-
 }
 
 
@@ -1594,44 +1111,38 @@ function login() {
    PAGE LOAD
 ========================================================= */
 
-window.onload = function () {
+window.addEventListener("load",function(){
 
-    if (
+    if(
         localStorage.getItem("loggedIn") === "true"
-    ) {
+    ){
 
         document.getElementById(
             "loginPage"
         ).style.display = "none";
 
-
         document.getElementById(
             "main"
         ).style.display = "flex";
-
 
         updateUI();
 
     }
 
-};
+});
 
 
 /* =========================================================
    LOGOUT
 ========================================================= */
 
-function logout() {
+function logout(){
 
-    localStorage.removeItem(
-        "loggedIn"
-    );
-
+    localStorage.removeItem("loggedIn");
 
     document.getElementById(
         "main"
     ).style.display = "none";
-
 
     document.getElementById(
         "loginPage"
@@ -1644,7 +1155,7 @@ function logout() {
    SECTION NAVIGATION
 ========================================================= */
 
-function showSection(id) {
+function showSection(id){
 
     const sections = [
         "dashboardSec",
@@ -1652,25 +1163,25 @@ function showSection(id) {
         "recordsSec"
     ];
 
+    sections.forEach(section => {
 
-    sections.forEach(
-        section => {
+        const element =
+            document.getElementById(section);
 
-            document.getElementById(
-                section
-            ).style.display = "none";
-
+        if(element){
+            element.style.display = "none";
         }
-    );
 
+    });
 
-    document.getElementById(
-        id
-    ).style.display = "block";
+    const selected =
+        document.getElementById(id);
 
+    if(selected){
+        selected.style.display = "block";
+    }
 
     updateUI();
-
 }
 
 
@@ -1678,49 +1189,42 @@ function showSection(id) {
    SERIAL CONNECTION
 ========================================================= */
 
-async function connectSerial() {
+async function connectSerial(){
 
-    if (!("serial" in navigator)) {
+    if(!("serial" in navigator)){
 
         alert(
-            "Web Serial API is not supported by this browser."
+            "Web Serial API is not supported.\n\n" +
+            "Use Google Chrome or Microsoft Edge."
         );
 
         return;
-
     }
 
-
-    try {
+    try{
 
         port =
             await navigator.serial.requestPort();
 
-
         await port.open({
-            baudRate: 9600
+            baudRate:9600
         });
-
 
         reader =
             port.readable.getReader();
 
-
         alert(
-            "Arduino Connected Successfully!"
+            "✅ Arduino Connected Successfully!"
         );
-
 
         readLoop();
 
-    }
-
-    catch (error) {
+    }catch(error){
 
         console.error(error);
 
         alert(
-            "Serial connection failed."
+            "❌ Serial connection failed."
         );
 
     }
@@ -1732,54 +1236,46 @@ async function connectSerial() {
    SERIAL READ LOOP
 ========================================================= */
 
-async function readLoop() {
+async function readLoop(){
 
     const decoder =
         new TextDecoder();
 
+    try{
 
-    try {
+        while(true){
 
-        while (true) {
+            const result =
+                await reader.read();
 
-            const {
-                value,
-                done
-            } = await reader.read();
-
-
-            if (done) {
-
+            if(result.done){
                 break;
-
             }
 
-
-            if (value) {
+            if(result.value){
 
                 buffer +=
-                    decoder.decode(value);
-
+                    decoder.decode(
+                        result.value
+                    );
 
                 const lines =
-                    buffer.split("\n");
-
+                    buffer.split(/\r?\n/);
 
                 buffer =
                     lines.pop();
 
+                lines.forEach(line => {
 
-                lines.forEach(
-                    parseLine
-                );
+                    parseLine(line);
+
+                });
 
             }
 
         }
 
-    }
-
-    catch (error) {
+    }catch(error){
 
         console.error(
             "Serial read error:",
@@ -1793,146 +1289,196 @@ async function readLoop() {
 
 /* =========================================================
    PARSE ARDUINO DATA
+=========================================================
+
+   Supported:
+
+   CANS:5,BOTTLES:10,MODE:READY
+
+   Also supported:
+
+   PAY:1
+   DEDUCT:1
+
+   Arduino COINS value is intentionally ignored.
 ========================================================= */
 
-/*
-    Example Arduino message:
+function parseLine(line){
 
-    CANS:5,BOTTLES:10,MODE:READY
+    line =
+        String(line || "").trim();
 
-    IMPORTANT:
-
-    COINS is intentionally ignored.
-
-    Why?
-
-    Because:
-
-        Arduino COINS
-             ≠
-        Hopper Balance
-
-    The hopper balance belongs to the Admin system.
-
-    Therefore:
-
-        Admin adds 100
-        Hopper = 100
-
-    Arduino sends:
-
-        COINS:1
-
-    We DO NOT do:
-
-        hopperCoins = 1
-
-    because that would destroy the registered balance.
-*/
-
-function parseLine(line) {
-
-    line = line.trim();
-
-    if (!line) {
+    if(!line){
         return;
     }
 
-    let newC = lastSerial.cans;
-    let newB = lastSerial.bottles;
+    let newCans =
+        lastSerial.cans;
+
+    let newBottles =
+        lastSerial.bottles;
+
+    let explicitPayout = 0;
 
     line.split(",").forEach(part => {
 
-        const pieces = part.split(":");
+        const pieces =
+            part.split(":");
 
-        if (pieces.length < 2) {
+        if(pieces.length < 2){
             return;
         }
 
-        const key = pieces[0].trim();
-        const value = pieces.slice(1).join(":").trim();
+        const key =
+            pieces[0]
+                .trim()
+                .toUpperCase();
 
-        if (key === "CANS") {
-            const parsed = parseInt(value, 10);
-            if (!isNaN(parsed)) {
-                newC = parsed;
+        const value =
+            pieces
+                .slice(1)
+                .join(":")
+                .trim();
+
+        if(key === "CANS"){
+
+            const parsed =
+                parseInt(value,10);
+
+            if(!isNaN(parsed)){
+                newCans = Math.max(0,parsed);
             }
+
         }
 
-        if (key === "BOTTLES") {
-            const parsed = parseInt(value, 10);
-            if (!isNaN(parsed)) {
-                newB = parsed;
+        else if(key === "BOTTLES"){
+
+            const parsed =
+                parseInt(value,10);
+
+            if(!isNaN(parsed)){
+                newBottles = Math.max(0,parsed);
             }
+
         }
 
-        if (key === "MODE") {
-            const mode = document.getElementById("mode");
-            if (mode) {
+        else if(key === "MODE"){
+
+            const mode =
+                document.getElementById("mode");
+
+            if(mode){
                 mode.innerText = value;
             }
+
+        }
+
+        else if(
+            key === "PAY" ||
+            key === "DEDUCT"
+        ){
+
+            const parsed =
+                Number(value);
+
+            if(
+                Number.isFinite(parsed) &&
+                parsed > 0
+            ){
+
+                explicitPayout += parsed;
+
+            }
+
         }
 
         /*
-           Optional Arduino PAY:/DEDUCT: support is kept.
-           If Arduino explicitly sends a payout, it will be
-           processed below. Otherwise the automatic reward
-           logic uses the counter thresholds.
+           IMPORTANT:
+
+           COINS is intentionally ignored.
+
+           Arduino COINS is NOT the hopper balance.
         */
-        if (key === "PAY" || key === "DEDUCT") {
-            const parsed = Number(value);
-            if (Number.isFinite(parsed) && parsed > 0) {
-                explicitSerialPayout += parsed;
-            }
-        }
     });
 
-    /* Handle Arduino counter reset without creating negative items. */
-    const cansReset = newC < lastSerial.cans;
-    const bottlesReset = newB < lastSerial.bottles;
 
-    if (cansReset) {
-        lastSerial.cans = 0;
-        localStorage.setItem("lastSerial", JSON.stringify(lastSerial));
+    /* =====================================================
+       HANDLE ARDUINO COUNTER RESET
+    ===================================================== */
+
+    const cansReset =
+        newCans < lastSerial.cans;
+
+    const bottlesReset =
+        newBottles < lastSerial.bottles;
+
+
+    const previousCans =
+        cansReset ? 0 : lastSerial.cans;
+
+    const previousBottles =
+        bottlesReset ? 0 : lastSerial.bottles;
+
+
+    /* =====================================================
+       ADD NEW ITEMS
+    ===================================================== */
+
+    if(newCans > previousCans){
+
+        inventory.cans +=
+            newCans - previousCans;
+
     }
 
-    if (bottlesReset) {
-        lastSerial.bottles = 0;
-        localStorage.setItem("lastSerial", JSON.stringify(lastSerial));
+
+    if(newBottles > previousBottles){
+
+        inventory.bottles +=
+            newBottles - previousBottles;
+
     }
 
-    const previousCans = cansReset ? 0 : lastSerial.cans;
-    const previousBottles = bottlesReset ? 0 : lastSerial.bottles;
 
-    if (newC > previousCans) {
-        inventory.cans += newC - previousCans;
-    }
+    /* =====================================================
+       SAVE INVENTORY
+    ===================================================== */
 
-    if (newB > previousBottles) {
-        inventory.bottles += newB - previousBottles;
-    }
+    saveInventory();
 
-    /*
-       AUTOMATIC REWARD RULES
 
-       2 cans    = ₱1
-       3 bottles = ₱1
+    /* =====================================================
+       AUTOMATIC REWARD
+    ===================================================== */
 
-       The reward is deducted from AVAILABLE hopper coins only.
-       hopperRecords remains unchanged.
-    */
     processAutomaticRewards();
 
-    /* Process an explicit PAY:/DEDUCT: message if Arduino sends one. */
-    if (explicitSerialPayout > 0) {
-        const explicitAmount = explicitSerialPayout;
-        explicitSerialPayout = 0;
-        deductRecyclingAmount(explicitAmount);
+
+    /* =====================================================
+       EXPLICIT PAY / DEDUCT
+
+       Uses the SAME deduction function.
+
+       This prevents two different deduction systems.
+    ===================================================== */
+
+    if(explicitPayout > 0){
+
+        deductRecyclingAmount(
+            explicitPayout,
+            true
+        );
+
     }
 
+
+    /* =====================================================
+       SAVE LAST SERIAL COUNTERS
+    ===================================================== */
+
     lastSerial = {
-        cans: newC,
-        bottles: newB
+        cans:newCans,
+        bottles:newBottles
     };
 
     localStorage.setItem(
@@ -1940,95 +1486,157 @@ function parseLine(line) {
         JSON.stringify(lastSerial)
     );
 
+
     updateUI();
+
 }
 
 
 /* =========================================================
-   AUTOMATIC RECYCLING REWARD
+   AUTOMATIC REWARD PROCESSOR
+=========================================================
 
-   2 CANS    = ₱1
-   3 BOTTLES = ₱1
+   RULES:
 
-   Only hopperCoins is reduced.
-   hopperRecords is NEVER reduced.
+   2 cans = ₱1
+   3 bottles = ₱1
+
+   IMPORTANT:
+
+   This function DOES NOT directly subtract money.
+
+   It calls deductRecyclingAmount().
+
+   Therefore there is only ONE place where
+   hopperCoins is deducted.
 ========================================================= */
 
-function processAutomaticRewards() {
+function processAutomaticRewards(){
 
-    const canRewards = Math.floor(inventory.cans / 2);
-    const bottleRewards = Math.floor(inventory.bottles / 3);
-    const totalEarnedRewards = canRewards + bottleRewards;
+    const canRewards =
+        Math.floor(
+            inventory.cans / 2
+        );
 
-    const newRewards = totalEarnedRewards - paidRewards;
+    const bottleRewards =
+        Math.floor(
+            inventory.bottles / 3
+        );
 
-    if (newRewards <= 0) {
+    const totalEarnedRewards =
+        canRewards + bottleRewards;
+
+
+    const newRewards =
+        totalEarnedRewards - paidRewards;
+
+
+    if(newRewards <= 0){
         return;
     }
 
-    /* Pay only what is currently available in the hopper. */
-    const payableRewards = Math.min(
-        newRewards,
-        Math.floor(hopperCoins)
-    );
 
-    if (payableRewards <= 0) {
+    /*
+       Pay only rewards that the hopper can currently afford.
+    */
+
+    const payableRewards =
+        Math.min(
+            newRewards,
+            Math.floor(hopperCoins)
+        );
+
+
+    if(payableRewards <= 0){
+
+        /*
+           Do NOT increase paidRewards.
+
+           This means the reward stays pending.
+
+           When admin adds coins later,
+           processAutomaticRewards() will try again.
+        */
+
         return;
     }
 
-    hopperCoins -= payableRewards;
 
-    if (hopperCoins < 0) {
-        hopperCoins = 0;
+    /*
+       Deduct ONE PESO at a time.
+    */
+
+    let successfulPayments = 0;
+
+    for(
+        let i = 0;
+        i < payableRewards;
+        i++
+    ){
+
+        const success =
+            deductRecyclingAmount(
+                1,
+                true
+            );
+
+        if(!success){
+            break;
+        }
+
+        successfulPayments++;
+
     }
 
-    localStorage.setItem(
-        "hopperCoins",
-        hopperCoins
-    );
 
-    /* Each ₱1 reward is one recycling payout transaction. */
-    for (let i = 0; i < payableRewards; i++) {
-        recordTransaction(1);
+    /*
+       Mark only successfully paid rewards.
+    */
+
+    if(successfulPayments > 0){
+
+        paidRewards +=
+            successfulPayments;
+
+        localStorage.setItem(
+            "paidRewards",
+            paidRewards
+        );
+
     }
 
-    paidRewards += payableRewards;
-
-    localStorage.setItem(
-        "paidRewards",
-        paidRewards
-    );
 }
 
 
 /* =========================================================
    HOPPER DEDUCTION
+=========================================================
+
+   THIS IS THE ONLY FUNCTION THAT SHOULD DEDUCT
+   RECYCLING PAYOUTS FROM THE HOPPER.
+
+   Example:
+
+   Hopper = ₱100
+
+   deductRecyclingAmount(1)
+
+   Hopper = ₱99
 ========================================================= */
 
-/*
-    This function removes money from the hopper.
-
-    Example:
-
-        Hopper = ₱100
-
-        deduction = ₱1
-
-        Hopper = ₱99
-*/
-
 function deductRecyclingAmount(
-    amount
-) {
+    amount,
+    silent = false
+){
 
     amount =
         Number(amount);
 
 
-    if (
+    if(
         !Number.isFinite(amount) ||
         amount <= 0
-    ) {
+    ){
 
         return false;
 
@@ -2036,23 +1644,26 @@ function deductRecyclingAmount(
 
 
     /*
-        DO NOT ALLOW NEGATIVE HOPPER
+       Prevent negative hopper.
     */
 
-    if (
+    if(
         hopperCoins < amount
-    ) {
+    ){
 
-        alert(
-            "⚠️ NOT ENOUGH COINS IN HOPPER!\n\n" +
+        if(!silent){
 
-            "Required: ₱" +
-            amount.toFixed(1) +
+            alert(
+                "⚠️ NOT ENOUGH COINS IN HOPPER!\n\n" +
 
-            "\nAvailable: ₱" +
-            hopperCoins.toFixed(1)
-        );
+                "Required: ₱" +
+                amount.toFixed(2) +
 
+                "\nAvailable: ₱" +
+                hopperCoins.toFixed(2)
+            );
+
+        }
 
         return false;
 
@@ -2060,14 +1671,27 @@ function deductRecyclingAmount(
 
 
     /*
-        ACTUAL DEDUCTION
+       ACTUAL DEDUCTION
     */
 
     hopperCoins -= amount;
 
 
     /*
-        Save immediately
+       Prevent floating point issues.
+    */
+
+    hopperCoins =
+        Math.max(
+            0,
+            Number(
+                hopperCoins.toFixed(2)
+            )
+        );
+
+
+    /*
+       Save immediately.
     */
 
     localStorage.setItem(
@@ -2077,19 +1701,16 @@ function deductRecyclingAmount(
 
 
     /*
-        Record transaction
+       Record payout.
     */
 
-    recordTransaction(
-        amount
-    );
+    recordTransaction(amount);
 
 
     updateUI();
 
 
     return true;
-
 }
 
 
@@ -2097,16 +1718,7 @@ function deductRecyclingAmount(
    EXACT ₱1 RECYCLING DEDUCTION
 ========================================================= */
 
-/*
-    Use this function when ONE recycling transaction
-    reaches exactly ₱1.
-
-    Example:
-
-        ₱100 → ₱99
-*/
-
-function deductRecyclingPeso() {
+function deductRecyclingPeso(){
 
     return deductRecyclingAmount(
         1
@@ -2119,26 +1731,28 @@ function deductRecyclingPeso() {
    RECORD TRANSACTION
 ========================================================= */
 
-function recordTransaction(
-    amount
-) {
+function recordTransaction(amount){
+
+    amount =
+        Number(amount);
+
+    if(
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ){
+        return;
+    }
+
 
     const date =
-        new Date()
-            .toISOString()
-            .split("T")[0];
+        getToday();
 
 
-    if (
-        !transactionRecords[date]
-    ) {
+    if(!transactionRecords[date]){
 
         transactionRecords[date] = {
-
-            transactions: 0,
-
-            value: 0
-
+            transactions:0,
+            value:0
         };
 
     }
@@ -2146,8 +1760,7 @@ function recordTransaction(
 
     transactionRecords[date].transactions += 1;
 
-    transactionRecords[date].value +=
-        Number(amount);
+    transactionRecords[date].value += amount;
 
 
     localStorage.setItem(
@@ -2161,102 +1774,117 @@ function recordTransaction(
 
 
 /* =========================================================
-   UPDATE UI
+   SAVE INVENTORY
 ========================================================= */
 
-function updateUI() {
-
-    /*
-        CANS
-    */
-
-    document.getElementById(
-        "cans"
-    ).innerText =
-        inventory.cans;
-
-
-    /*
-        BOTTLES
-    */
-
-    document.getElementById(
-        "bottles"
-    ).innerText =
-        inventory.bottles;
-
-
-    /*
-        HOPPER COINS
-
-        THIS IS THE IMPORTANT PART.
-
-        Dashboard shows hopperCoins,
-        NOT Arduino COINS.
-    */
-
-    document.getElementById(
-        "coins"
-    ).innerText =
-        hopperCoins.toFixed(2);
-
-
-    /*
-        TOTAL ITEMS
-    */
-
-    document.getElementById(
-        "total"
-    ).innerText =
-        inventory.cans +
-        inventory.bottles;
-
-
-    /*
-        ADMIN HOPPER BALANCE
-    */
-
-    document.getElementById(
-        "adminHopperBalance"
-    ).innerText =
-        hopperCoins.toFixed(2);
-
-
-    /*
-        SAVE COUNTERS
-    */
+function saveInventory(){
 
     localStorage.setItem(
         "cans",
         inventory.cans
     );
 
-
     localStorage.setItem(
         "bottles",
         inventory.bottles
     );
 
+}
 
-    /*
-        SAVE HOPPER
 
-        This makes sure that after refresh:
+/* =========================================================
+   GET TODAY
+========================================================= */
 
-            ₱100 stays ₱100
+function getToday(){
 
-        until something actually deducts it.
-    */
+    const now =
+        new Date();
+
+    const year =
+        now.getFullYear();
+
+    const month =
+        String(
+            now.getMonth()+1
+        ).padStart(2,"0");
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2,"0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
+/* =========================================================
+   UPDATE UI
+========================================================= */
+
+function updateUI(){
+
+    const cans =
+        document.getElementById("cans");
+
+    const bottles =
+        document.getElementById("bottles");
+
+    const coins =
+        document.getElementById("coins");
+
+    const total =
+        document.getElementById("total");
+
+    const adminBalance =
+        document.getElementById(
+            "adminHopperBalance"
+        );
+
+
+    if(cans){
+        cans.innerText =
+            inventory.cans;
+    }
+
+    if(bottles){
+        bottles.innerText =
+            inventory.bottles;
+    }
+
+    if(coins){
+        coins.innerText =
+            hopperCoins.toFixed(2);
+    }
+
+    if(total){
+
+        total.innerText =
+            inventory.cans +
+            inventory.bottles;
+
+    }
+
+    if(adminBalance){
+
+        adminBalance.innerText =
+            hopperCoins.toFixed(2);
+
+    }
+
+
+    saveInventory();
 
     localStorage.setItem(
         "hopperCoins",
         hopperCoins
     );
 
+    recordDaily();
 
     updateQuickStats();
 
-    recordDaily();
+    updateRecordUI();
 
 }
 
@@ -2265,36 +1893,24 @@ function updateUI() {
    DAILY RECORD
 ========================================================= */
 
-function recordDaily() {
+function recordDaily(){
 
     const date =
-        new Date()
-            .toISOString()
-            .split("T")[0];
+        getToday();
 
 
-    if (
-        !dailyRecords[date]
-    ) {
+    if(!dailyRecords[date]){
 
         dailyRecords[date] = {
-
-            cans: 0,
-
-            bottles: 0
-
+            cans:0,
+            bottles:0
         };
 
     }
 
 
-    /*
-        Store current totals.
-    */
-
     dailyRecords[date].cans =
         inventory.cans;
-
 
     dailyRecords[date].bottles =
         inventory.bottles;
@@ -2307,9 +1923,6 @@ function recordDaily() {
         )
     );
 
-
-    updateRecordUI();
-
 }
 
 
@@ -2317,12 +1930,10 @@ function recordDaily() {
    QUICK STATISTICS
 ========================================================= */
 
-function updateQuickStats() {
+function updateQuickStats(){
 
     const today =
-        new Date()
-            .toISOString()
-            .split("T")[0];
+        getToday();
 
 
     const todayRecord =
@@ -2331,46 +1942,86 @@ function updateQuickStats() {
 
     const todayTotal =
         todayRecord
-            ? (
-                Number(todayRecord.cans || 0) +
-                Number(todayRecord.bottles || 0)
-            )
+            ? Number(todayRecord.cans || 0) +
+              Number(todayRecord.bottles || 0)
             : 0;
 
 
-    document.getElementById(
-        "todayTotal"
-    ).innerText =
-        todayTotal;
+    const todayElement =
+        document.getElementById(
+            "todayTotal"
+        );
+
+    const weekElement =
+        document.getElementById(
+            "weekTotal"
+        );
+
+    const valueElement =
+        document.getElementById(
+            "totalValue"
+        );
+
+    const rateElement =
+        document.getElementById(
+            "collectionRate"
+        );
 
 
-    document.getElementById(
-        "weekTotal"
-    ).innerText =
-        inventory.cans +
-        inventory.bottles;
+    if(todayElement){
+        todayElement.innerText =
+            todayTotal;
+    }
 
 
     /*
-        Example value:
-        each item = ₱0.50
+       NOTE:
+
+       This is currently the overall total,
+       not a true Monday-Sunday calculation.
     */
 
-    const totalValue =
-        (
+    if(weekElement){
+
+        weekElement.innerText =
             inventory.cans +
-            inventory.bottles
-        ) * 0.5;
+            inventory.bottles;
 
-
-    document.getElementById(
-        "totalValue"
-    ).innerText =
-        totalValue.toFixed(2);
+    }
 
 
     /*
-        Collection rate
+       2 cans = ₱1
+       3 bottles = ₱1
+
+       Dashboard estimated recycling value.
+    */
+
+    const canValue =
+        Math.floor(
+            inventory.cans / 2
+        );
+
+    const bottleValue =
+        Math.floor(
+            inventory.bottles / 3
+        );
+
+    const totalValue =
+        canValue +
+        bottleValue;
+
+
+    if(valueElement){
+
+        valueElement.innerText =
+            totalValue.toFixed(2);
+
+    }
+
+
+    /*
+       Simple display rate.
     */
 
     const rate =
@@ -2382,94 +2033,144 @@ function updateQuickStats() {
         );
 
 
-    document.getElementById(
-        "collectionRate"
-    ).innerText =
-        rate + "/hr";
+    if(rateElement){
+
+        rateElement.innerText =
+            rate + "/hr";
+
+    }
 
 }
 
 
 /* =========================================================
-   ADMIN ADD COINS
+   ADMIN ADD HOPPER COINS
 ========================================================= */
 
-/*
-    Example:
+function addManualCoin(){
 
-        Hopper currently = ₱0
+    const input =
+        document.getElementById(
+            "manualCoins"
+        );
 
-        Admin enters:
-        100
 
-        Result:
-        ₱100
-*/
+    const value =
+        Number(input.value);
 
-function recordHopperLoading(amount) {
 
-    amount = Number(amount);
+    if(
+        !Number.isFinite(value) ||
+        value <= 0
+    ){
 
-    if (!Number.isFinite(amount) || amount <= 0) {
+        alert(
+            "Please enter a valid coin amount."
+        );
+
         return;
     }
 
-    const date = new Date().toISOString().split("T")[0];
 
-    if (!hopperRecords[date]) {
-        hopperRecords[date] = { loaded: 0 };
-    }
-
-    hopperRecords[date].loaded += amount;
-
-    localStorage.setItem(
-        "hopperRecords",
-        JSON.stringify(hopperRecords)
-    );
-}
-
-
-/* =========================================================
-   ADMIN ADD COINS
-========================================================= */
-
-function addManualCoin() {
-
-    const input = document.getElementById("manualCoins");
-    const value = Number(input.value);
-
-    if (!Number.isFinite(value) || value <= 0) {
-        alert("Please enter a valid coin amount.");
-        return;
-    }
+    /*
+       ADD TO ACTUAL HOPPER BALANCE.
+    */
 
     hopperCoins += value;
+
+
+    hopperCoins =
+        Number(
+            hopperCoins.toFixed(2)
+        );
+
+
+    /*
+       SAVE CURRENT HOPPER.
+    */
 
     localStorage.setItem(
         "hopperCoins",
         hopperCoins
     );
 
+
     /*
-       IMPORTANT:
-       This records the amount loaded by admin.
-       It will NOT be reduced by recycling payouts.
+       Record original loading.
     */
+
     recordHopperLoading(value);
 
-    /* If rewards were waiting because hopper was empty, pay them now. */
+
+    /*
+       If there were unpaid recycling rewards,
+       pay them now.
+    */
+
     processAutomaticRewards();
+
 
     updateUI();
 
+
     alert(
         "✅ Hopper loaded successfully!\n\n" +
-        "Added: ₱" + value.toFixed(2) +
-        "\nCurrent Available Payout: ₱" +
+
+        "Added: ₱" +
+        value.toFixed(2) +
+
+        "\nCurrent Hopper Balance: ₱" +
         hopperCoins.toFixed(2)
     );
 
+
     input.value = "";
+
+}
+
+
+/* =========================================================
+   RECORD HOPPER LOADING
+========================================================= */
+
+function recordHopperLoading(amount){
+
+    amount =
+        Number(amount);
+
+
+    if(
+        !Number.isFinite(amount) ||
+        amount <= 0
+    ){
+        return;
+    }
+
+
+    const date =
+        getToday();
+
+
+    if(!hopperRecords[date]){
+
+        hopperRecords[date] = {
+            loaded:0
+        };
+
+    }
+
+
+    hopperRecords[date].loaded +=
+        amount;
+
+
+    localStorage.setItem(
+        "hopperRecords",
+        JSON.stringify(
+            hopperRecords
+        )
+    );
+
 }
 
 
@@ -2477,7 +2178,7 @@ function addManualCoin() {
    ADMIN MANUAL DEDUCT
 ========================================================= */
 
-function deductManualCoin() {
+function deductManualCoin(){
 
     const input =
         document.getElementById(
@@ -2489,23 +2190,20 @@ function deductManualCoin() {
         Number(input.value);
 
 
-    if (
+    if(
         !Number.isFinite(value) ||
         value <= 0
-    ) {
+    ){
 
         alert(
             "Please enter a valid deduction."
         );
 
         return;
-
     }
 
 
-    if (
-        value > hopperCoins
-    ) {
+    if(value > hopperCoins){
 
         alert(
             "⚠️ NOT ENOUGH COINS!\n\n" +
@@ -2515,11 +2213,19 @@ function deductManualCoin() {
         );
 
         return;
-
     }
 
 
     hopperCoins -= value;
+
+
+    hopperCoins =
+        Math.max(
+            0,
+            Number(
+                hopperCoins.toFixed(2)
+            )
+        );
 
 
     localStorage.setItem(
@@ -2548,15 +2254,10 @@ function deductManualCoin() {
 
 
 /* =========================================================
-   REFRESH
+   REFRESH DATA
 ========================================================= */
 
-function refreshData() {
-
-    /*
-        Reload values from localStorage
-        so the UI reflects the saved values.
-    */
+function refreshData(){
 
     inventory.cans =
         Number(
@@ -2583,12 +2284,14 @@ function refreshData() {
             )
         ) || {};
 
+
     transactionRecords =
         JSON.parse(
             localStorage.getItem(
                 "transactionRecords"
             )
         ) || {};
+
 
     hopperRecords =
         JSON.parse(
@@ -2597,10 +2300,25 @@ function refreshData() {
             )
         ) || {};
 
+
     paidRewards =
         Number(
-            localStorage.getItem("paidRewards")
+            localStorage.getItem(
+                "paidRewards"
+            )
         ) || 0;
+
+
+    lastSerial =
+        JSON.parse(
+            localStorage.getItem(
+                "lastSerial"
+            )
+        ) || {
+            cans:0,
+            bottles:0
+        };
+
 
     updateUI();
 
@@ -2616,7 +2334,7 @@ function refreshData() {
    COPY STATS
 ========================================================= */
 
-function copyStats() {
+function copyStats(){
 
     const stats =
         "TRASH2CASH SYSTEM\n\n" +
@@ -2627,7 +2345,7 @@ function copyStats() {
         "\nBottles: " +
         inventory.bottles +
 
-        "\nHopper Coins: ₱" +
+        "\nCurrent Hopper Balance: ₱" +
         hopperCoins.toFixed(2) +
 
         "\nTotal Items: " +
@@ -2645,6 +2363,13 @@ function copyStats() {
                 "📋 Stats copied!"
             );
 
+        })
+        .catch(() => {
+
+            alert(
+                "Unable to copy statistics."
+            );
+
         });
 
 }
@@ -2654,17 +2379,26 @@ function copyStats() {
    CLEAR INPUTS
 ========================================================= */
 
-function clearInputs() {
+function clearInputs(){
 
-    document.getElementById(
-        "manualCoins"
-    ).value = "";
+    const manual =
+        document.getElementById(
+            "manualCoins"
+        );
+
+    const deduct =
+        document.getElementById(
+            "deductCoins"
+        );
 
 
-    document.getElementById(
-        "deductCoins"
-    ).value = "";
+    if(manual){
+        manual.value = "";
+    }
 
+    if(deduct){
+        deduct.value = "";
+    }
 
 }
 
@@ -2673,7 +2407,7 @@ function clearInputs() {
    CLEAR ALL INPUTS
 ========================================================= */
 
-function clearAllInputs() {
+function clearAllInputs(){
 
     clearInputs();
 
@@ -2688,15 +2422,16 @@ function clearAllInputs() {
    QUICK SUMMARY
 ========================================================= */
 
-function showSummary() {
+function showSummary(){
 
     const total =
         inventory.cans +
         inventory.bottles;
 
 
-    const value =
-        total * 0.5;
+    const rewards =
+        Math.floor(inventory.cans / 2) +
+        Math.floor(inventory.bottles / 3);
 
 
     alert(
@@ -2711,10 +2446,19 @@ function showSummary() {
         "\nTotal Items: " +
         total +
 
-        "\nRecycling Value: ₱" +
-        value.toFixed(2) +
+        "\nEarned Rewards: ₱" +
+        rewards.toFixed(2) +
 
-        "\n\nHopper Balance: ₱" +
+        "\nPaid Rewards: ₱" +
+        paidRewards.toFixed(2) +
+
+        "\nPending Rewards: ₱" +
+        Math.max(
+            0,
+            rewards - paidRewards
+        ).toFixed(2) +
+
+        "\n\nCurrent Hopper: ₱" +
         hopperCoins.toFixed(2)
     );
 
@@ -2725,46 +2469,79 @@ function showSummary() {
    RECORD TABLE
 ========================================================= */
 
-function updateRecordUI() {
+function updateRecordUI(){
 
-    const table = document.getElementById("recordList");
+    const table =
+        document.getElementById(
+            "recordList"
+        );
 
-    if (!table) {
+
+    if(!table){
         return;
     }
 
+
     table.innerHTML = "";
+
 
     let totalCans = 0;
     let totalBottles = 0;
     let totalHopperLoaded = 0;
     let totalTransactions = 0;
 
-    /* Include dates that only contain hopper loading records. */
-    const dateSet = new Set([
-        ...Object.keys(dailyRecords),
-        ...Object.keys(hopperRecords),
-        ...Object.keys(transactionRecords)
-    ]);
 
-    const dates = Array.from(dateSet).sort();
+    const dateSet =
+        new Set([
+            ...Object.keys(dailyRecords),
+            ...Object.keys(hopperRecords),
+            ...Object.keys(transactionRecords)
+        ]);
+
+
+    const dates =
+        Array.from(dateSet)
+            .sort()
+            .reverse();
+
 
     dates.forEach(date => {
 
-        const record = dailyRecords[date] || { cans: 0, bottles: 0 };
+        const record =
+            dailyRecords[date] || {
+                cans:0,
+                bottles:0
+            };
 
-        const transactions = transactionRecords[date]
-            ? Number(transactionRecords[date].transactions || 0)
-            : 0;
 
-        const hopperLoaded = hopperRecords[date]
-            ? Number(hopperRecords[date].loaded || 0)
-            : 0;
+        const transactions =
+            transactionRecords[date]
+                ? Number(
+                    transactionRecords[date].transactions || 0
+                )
+                : 0;
 
-        totalCans += Number(record.cans || 0);
-        totalBottles += Number(record.bottles || 0);
-        totalHopperLoaded += hopperLoaded;
-        totalTransactions += transactions;
+
+        const hopperLoaded =
+            hopperRecords[date]
+                ? Number(
+                    hopperRecords[date].loaded || 0
+                )
+                : 0;
+
+
+        totalCans +=
+            Number(record.cans || 0);
+
+        totalBottles +=
+            Number(record.bottles || 0);
+
+        totalHopperLoaded +=
+            hopperLoaded;
+
+        totalTransactions +=
+            transactions;
+
 
         table.innerHTML += `
             <tr>
@@ -2775,25 +2552,216 @@ function updateRecordUI() {
                 <td>${transactions}</td>
             </tr>
         `;
+
     });
 
-    const totalCansElement = document.getElementById("totalCans");
-    const totalBottlesElement = document.getElementById("totalBottles");
-    const totalHopperLoadedElement = document.getElementById("totalHopperLoaded");
-    const totalCoinsElement = document.getElementById("totalCoins");
 
-    if (totalCansElement) totalCansElement.innerText = totalCans;
-    if (totalBottlesElement) totalBottlesElement.innerText = totalBottles;
-    if (totalHopperLoadedElement) totalHopperLoadedElement.innerText = "₱" + totalHopperLoaded.toFixed(2);
-    if (totalCoinsElement) totalCoinsElement.innerText = totalTransactions;
+    const totalCansElement =
+        document.getElementById(
+            "totalCans"
+        );
+
+    const totalBottlesElement =
+        document.getElementById(
+            "totalBottles"
+        );
+
+    const totalHopperElement =
+        document.getElementById(
+            "totalHopperLoaded"
+        );
+
+    const totalCoinsElement =
+        document.getElementById(
+            "totalCoins"
+        );
+
+
+    if(totalCansElement){
+        totalCansElement.innerText =
+            totalCans;
+    }
+
+    if(totalBottlesElement){
+        totalBottlesElement.innerText =
+            totalBottles;
+    }
+
+    if(totalHopperElement){
+        totalHopperElement.innerText =
+            "₱" +
+            totalHopperLoaded.toFixed(2);
+    }
+
+    if(totalCoinsElement){
+        totalCoinsElement.innerText =
+            totalTransactions;
+    }
+
 }
 
 
 /* =========================================================
-   PRINT TABLE
+   COPY TABLE DATA
 ========================================================= */
 
-function printTable() {
+function copyTableData(){
+
+    let text =
+        "TRASH2CASH DAILY RECORDS\n\n";
+
+    text +=
+        "Date | Cans | Bottles | Hopper Loaded | Recycling Payouts\n";
+
+    text +=
+        "----------------------------------------------------------\n";
+
+
+    const dateSet =
+        new Set([
+            ...Object.keys(dailyRecords),
+            ...Object.keys(hopperRecords),
+            ...Object.keys(transactionRecords)
+        ]);
+
+
+    Array.from(dateSet)
+        .sort()
+        .forEach(date => {
+
+            const record =
+                dailyRecords[date] || {
+                    cans:0,
+                    bottles:0
+                };
+
+
+            const loaded =
+                hopperRecords[date]
+                    ? hopperRecords[date].loaded
+                    : 0;
+
+
+            const payouts =
+                transactionRecords[date]
+                    ? transactionRecords[date].transactions
+                    : 0;
+
+
+            text +=
+                `${date} | ` +
+                `${record.cans || 0} | ` +
+                `${record.bottles || 0} | ` +
+                `₱${Number(loaded).toFixed(2)} | ` +
+                `${payouts}\n`;
+
+        });
+
+
+    navigator.clipboard
+        .writeText(text)
+        .then(() => {
+
+            alert(
+                "📋 Table copied!"
+            );
+
+        })
+        .catch(() => {
+
+            alert(
+                "Unable to copy table."
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   CLEAR FILTER
+========================================================= */
+
+function clearFilters(){
+
+    updateRecordUI();
+
+    alert(
+        "🔍 Filter cleared."
+    );
+
+}
+
+
+/* =========================================================
+   RECORD SUMMARY
+========================================================= */
+
+function showRecordSummary(){
+
+    let cans = 0;
+    let bottles = 0;
+    let loaded = 0;
+    let payouts = 0;
+
+
+    Object.values(dailyRecords)
+        .forEach(record => {
+
+            cans +=
+                Number(record.cans || 0);
+
+            bottles +=
+                Number(record.bottles || 0);
+
+        });
+
+
+    Object.values(hopperRecords)
+        .forEach(record => {
+
+            loaded +=
+                Number(record.loaded || 0);
+
+        });
+
+
+    Object.values(transactionRecords)
+        .forEach(record => {
+
+            payouts +=
+                Number(record.transactions || 0);
+
+        });
+
+
+    alert(
+        "📊 RECORD SUMMARY\n\n" +
+
+        "Total Cans: " +
+        cans +
+
+        "\nTotal Bottles: " +
+        bottles +
+
+        "\nHopper Loaded: ₱" +
+        loaded.toFixed(2) +
+
+        "\nRecycling Payouts: " +
+        payouts +
+
+        "\nCurrent Hopper: ₱" +
+        hopperCoins.toFixed(2)
+    );
+
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+function printTable(){
 
     window.print();
 
@@ -2804,7 +2772,7 @@ function printTable() {
    RESET ALL DATA
 ========================================================= */
 
-function resetData() {
+function resetData(){
 
     const confirmed =
         confirm(
@@ -2816,34 +2784,29 @@ function resetData() {
             "• Bottles\n" +
             "• Hopper Coins\n" +
             "• Daily Records\n" +
+            "• Hopper Loading Records\n" +
             "• Transaction Records\n" +
+            "• Paid Rewards\n" +
             "• Arduino Counters\n\n" +
 
             "This cannot be undone."
         );
 
 
-    if (!confirmed) {
-
+    if(!confirmed){
         return;
-
     }
 
 
     inventory = {
-
-        cans: 0,
-
-        bottles: 0
-
+        cans:0,
+        bottles:0
     };
 
 
     hopperCoins = 0;
 
-
     dailyRecords = {};
-
 
     transactionRecords = {};
 
@@ -2851,52 +2814,25 @@ function resetData() {
 
     paidRewards = 0;
 
-    explicitSerialPayout = 0;
-
 
     lastSerial = {
-
-        cans: 0,
-
-        bottles: 0
-
+        cans:0,
+        bottles:0
     };
 
 
-    localStorage.removeItem(
-        "cans"
-    );
-
-    localStorage.removeItem(
-        "bottles"
-    );
-
-    localStorage.removeItem(
-        "hopperCoins"
-    );
-
-    localStorage.removeItem(
-        "dailyRecords"
-    );
-
-    localStorage.removeItem(
-        "transactionRecords"
-    );
-
-    localStorage.removeItem(
-        "hopperRecords"
-    );
-
-    localStorage.removeItem(
-        "paidRewards"
-    );
+    localStorage.removeItem("cans");
+    localStorage.removeItem("bottles");
+    localStorage.removeItem("hopperCoins");
+    localStorage.removeItem("dailyRecords");
+    localStorage.removeItem("transactionRecords");
+    localStorage.removeItem("hopperRecords");
+    localStorage.removeItem("paidRewards");
 
 
     localStorage.setItem(
         "lastSerial",
-        JSON.stringify(
-            lastSerial
-        )
+        JSON.stringify(lastSerial)
     );
 
 
@@ -2914,23 +2850,18 @@ function resetData() {
    DOWNLOAD RECEIPT
 ========================================================= */
 
-function downloadReceipt() {
+function downloadReceipt(){
 
     const canvas =
-        document.createElement(
-            "canvas"
-        );
+        document.createElement("canvas");
 
 
     const ctx =
-        canvas.getContext(
-            "2d"
-        );
+        canvas.getContext("2d");
 
 
-    canvas.width = 600;
-
-    canvas.height = 800;
+    canvas.width = 800;
+    canvas.height = 900;
 
 
     /* Background */
@@ -2953,33 +2884,40 @@ function downloadReceipt() {
         );
 
 
-    try {
+    if(
+        logo &&
+        logo.complete &&
+        logo.naturalWidth > 0
+    ){
 
-        ctx.drawImage(
-            logo,
-            250,
-            20,
-            100,
-            100
-        );
+        try{
 
-    }
+            ctx.drawImage(
+                logo,
+                350,
+                20,
+                100,
+                100
+            );
 
-    catch (error) {
+        }catch(error){
 
-        console.log(
-            "Logo could not be drawn."
-        );
+            console.log(
+                "Logo could not be drawn."
+            );
+
+        }
 
     }
 
 
     /* Header */
 
-    ctx.fillStyle = "#2e7d32";
+    ctx.fillStyle =
+        "#2e7d32";
 
     ctx.font =
-        "bold 22px Arial";
+        "bold 24px Arial";
 
     ctx.textAlign =
         "center";
@@ -2987,24 +2925,25 @@ function downloadReceipt() {
 
     ctx.fillText(
         "SAN VICENTE NATIONAL HIGH SCHOOL",
-        canvas.width / 2,
+        canvas.width/2,
         150
     );
 
 
     ctx.fillText(
         "TRASH2CASH DAILY RECEIPT",
-        canvas.width / 2,
-        180
+        canvas.width/2,
+        185
     );
 
 
     /* Table header */
 
-    ctx.fillStyle = "#000";
+    ctx.fillStyle =
+        "#000";
 
     ctx.font =
-        "bold 18px Arial";
+        "bold 17px Arial";
 
     ctx.textAlign =
         "left";
@@ -3013,57 +2952,53 @@ function downloadReceipt() {
     ctx.fillText(
         "Date",
         50,
-        220
+        230
     );
-
 
     ctx.fillText(
         "Cans",
-        200,
-        220
+        230,
+        230
     );
-
 
     ctx.fillText(
         "Bottles",
-        300,
-        220
+        330,
+        230
     );
 
-
     ctx.fillText(
-        "Transactions",
-        420,
-        220
+        "Payouts",
+        470,
+        230
     );
 
 
     ctx.font =
-        "16px Arial";
+        "15px Arial";
 
 
-    let y = 250;
+    let y = 260;
 
 
     let totalCans = 0;
-
     let totalBottles = 0;
+    let totalPayouts = 0;
 
-    let totalTransactions = 0;
 
-
-    Object.keys(
-        dailyRecords
-    ).forEach(
-        date => {
+    Object.keys(dailyRecords)
+        .sort()
+        .forEach(date => {
 
             const record =
                 dailyRecords[date];
 
 
-            const transactions =
+            const payouts =
                 transactionRecords[date]
-                    ? transactionRecords[date].transactions
+                    ? Number(
+                        transactionRecords[date].transactions || 0
+                    )
                     : 0;
 
 
@@ -3078,7 +3013,7 @@ function downloadReceipt() {
                 String(
                     record.cans || 0
                 ),
-                200,
+                230,
                 y
             );
 
@@ -3087,40 +3022,31 @@ function downloadReceipt() {
                 String(
                     record.bottles || 0
                 ),
-                300,
+                330,
                 y
             );
 
 
             ctx.fillText(
-                String(
-                    transactions
-                ),
-                450,
+                String(payouts),
+                470,
                 y
             );
 
 
             totalCans +=
-                Number(
-                    record.cans || 0
-                );
-
+                Number(record.cans || 0);
 
             totalBottles +=
-                Number(
-                    record.bottles || 0
-                );
+                Number(record.bottles || 0);
 
-
-            totalTransactions +=
-                transactions;
+            totalPayouts +=
+                payouts;
 
 
             y += 30;
 
-        }
-    );
+        });
 
 
     /* Totals */
@@ -3132,50 +3058,55 @@ function downloadReceipt() {
     ctx.fillText(
         "TOTAL",
         50,
-        y + 20
+        y + 25
     );
 
 
     ctx.fillText(
         String(totalCans),
-        200,
-        y + 20
+        230,
+        y + 25
     );
 
 
     ctx.fillText(
         String(totalBottles),
-        300,
-        y + 20
+        330,
+        y + 25
     );
 
 
     ctx.fillText(
-        String(totalTransactions),
-        450,
-        y + 20
+        String(totalPayouts),
+        470,
+        y + 25
     );
 
 
-    /* Hopper balance */
-
-    ctx.font =
-        "bold 18px Arial";
-
+    /* Hopper */
 
     ctx.fillText(
         "CURRENT HOPPER: ₱" +
         hopperCoins.toFixed(2),
         50,
-        y + 70
+        y + 80
+    );
+
+
+    /* Paid rewards */
+
+    ctx.fillText(
+        "TOTAL PAID REWARDS: ₱" +
+        paidRewards.toFixed(2),
+        50,
+        y + 115
     );
 
 
     /* Footer */
 
     ctx.font =
-        "16px Arial";
-
+        "15px Arial";
 
     ctx.textAlign =
         "center";
@@ -3183,7 +3114,7 @@ function downloadReceipt() {
 
     ctx.fillText(
         "JV STUDIO • ARDUINO UNO",
-        canvas.width / 2,
+        canvas.width/2,
         canvas.height - 40
     );
 
@@ -3191,9 +3122,7 @@ function downloadReceipt() {
     /* Download */
 
     const link =
-        document.createElement(
-            "a"
-        );
+        document.createElement("a");
 
 
     link.download =
@@ -3209,6 +3138,24 @@ function downloadReceipt() {
     link.click();
 
 }
+
+
+/* =========================================================
+   ENTER KEY LOGIN
+========================================================= */
+
+document
+    .getElementById("password")
+    .addEventListener(
+        "keydown",
+        function(event){
+
+            if(event.key === "Enter"){
+                login();
+            }
+
+        }
+    );
 
 </script>
 
